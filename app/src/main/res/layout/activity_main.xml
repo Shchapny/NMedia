@@ -91,7 +91,7 @@
         android:minHeight="48dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/ic_baseline_favorite_24"
+        app:srcCompat="@drawable/ic_baseline_favorite_border_24"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
