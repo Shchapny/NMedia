@@ -4,18 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:padding="@dimen/offset">
+    android:padding="@dimen/offset"
+    tools:context=".MainActivity">
 
     <ImageView
         android:id="@+id/avatar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
         android:layout_marginBottom="@dimen/offset"
-        tools:srcCompat="@sample/post_avatars"
-        />
+        android:src="@drawable/post_avatars"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/author"
@@ -37,9 +36,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/offset"
-        app:layout_constraintStart_toEndOf="@+id/avatar"
         app:layout_constraintBottom_toBottomOf="@+id/avatar"
-        tools:text="@sample/posts.json/data/published"/>
+        app:layout_constraintStart_toEndOf="@+id/avatar"
+        tools:text="@sample/posts.json/data/published" />
 
     <ImageButton
         android:id="@+id/menu"
@@ -55,31 +54,29 @@
         android:id="@+id/barrier1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="avatar, menu, published"
         android:layout_marginTop="@dimen/offset"
-         />
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="avatar, menu, published" />
 
     <TextView
         android:id="@+id/content"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="@sample/posts.json/data/content"
+        android:layout_marginTop="@dimen/offset"
         android:autoLink="web"
         android:textColorLink="@color/purple_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier1"
-        android:layout_marginTop="@dimen/offset"/>
+        tools:text="@sample/posts.json/data/content" />
 
     <androidx.constraintlayout.widget.Barrier
+        android:id="@+id/barrier2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:barrierDirection="bottom"
-        app:constraint_referenced_ids="content"
         android:layout_marginTop="@dimen/offset"
-        android:id="@+id/barrier2"
-         />
+        app:barrierDirection="bottom"
+        app:constraint_referenced_ids="content" />
 
     <ImageButton
         android:id="@+id/likes"
@@ -96,12 +93,12 @@
 
     <TextView
         android:id="@+id/textLikes"
-        tools:text="@sample/posts.json/data/likes"
-        android:layout_marginTop="@dimen/offset"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset"
         app:layout_constraintStart_toEndOf="@+id/likes"
-        app:layout_constraintTop_toTopOf="@+id/likes" />
+        app:layout_constraintTop_toTopOf="@+id/likes"
+        tools:text="@sample/posts.json/data/likes" />
 
     <ImageButton
         android:id="@+id/share"
@@ -121,21 +118,21 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
-        tools:text="@sample/posts.json/data/share"
         app:layout_constraintStart_toEndOf="@+id/share"
-        app:layout_constraintTop_toTopOf="@+id/share" />
+        app:layout_constraintTop_toTopOf="@+id/share"
+        tools:text="@sample/posts.json/data/share" />
 
     <ImageButton
         android:id="@+id/views"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/offset"
+        android:layout_marginEnd="48dp"
         android:background="@android:color/transparent"
         android:minWidth="48dp"
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        android:layout_marginTop="@dimen/offset"
-        android:layout_marginEnd="48dp"
         app:srcCompat="@drawable/ic_baseline_visibility_24"
         tools:ignore="SpeakableTextPresentCheck" />
 
