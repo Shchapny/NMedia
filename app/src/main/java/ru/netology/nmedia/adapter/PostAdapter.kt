@@ -23,10 +23,7 @@ class PostAdapter(
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
-        val like = getItem(position)
-        holder.bind(like)
-        val share = getItem(position)
-        holder.bind(share)
+        holder.bind(getItem(position))
     }
 }
 
