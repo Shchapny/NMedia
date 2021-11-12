@@ -1,7 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">NMedia</string>
-    <string name="str_hello">NMedia</string>
     <string name="remove_post">Remove</string>
     <string name="blank_content_error">Content is blank</string>
-    <string name="edit_post">Edit</string>
+    <string name="edit_post">edit_post</string>
 </resources>

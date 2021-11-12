@@ -2,9 +2,14 @@ package ru.netology.nmedia
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import ru.netology.nmedia.adapter.PostActionListener
 import ru.netology.nmedia.adapter.PostAdapter
 import ru.netology.nmedia.databinding.ActivityMainBinding
+import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class MainActivity : AppCompatActivity() {
@@ -18,11 +23,62 @@ class MainActivity : AppCompatActivity() {
 
         val viewModel by viewModels<PostViewModel>()
         val adapter = PostAdapter(
-            {viewModel.like(it.id)},
-            {viewModel.share(it.id)}
+            object : PostActionListener {
+                override fun edit(post: Post) {
+                    viewModel.edit(post)
+                    binding.group.visibility = View.VISIBLE
+                }
+
+                override fun remove(post: Post) {
+                    viewModel.remove(post.id)
+                }
+
+                override fun like(post: Post) {
+                    viewModel.like(post.id)
+                }
+
+                override fun share(post: Post) {
+                    viewModel.share(post.id)
+                }
+
+            }
         )
 
         binding.container.adapter = adapter
         viewModel.data.observe(this, adapter::submitList)
+
+        with(binding) {
+            add.setOnClickListener {
+                val text = editContent.text?.toString()
+                if (text.isNullOrBlank()) {
+                    Toast.makeText(this@MainActivity, getString(R.string.blank_content_error), Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                viewModel.editContent(text)
+                viewModel.add()
+
+                editContent.setText("")
+                editContent.clearFocus()
+                AndroidUtils.hideKeyboard(editContent)
+            }
+
+            close.setOnClickListener {
+                editContent.setText("")
+                editContent.clearFocus()
+                AndroidUtils.hideKeyboard(editContent)
+                group.visibility = View.GONE
+            }
+
+            viewModel.edited.observe(this@MainActivity) {
+                if (it.id == 0L) {
+                    return@observe
+                }
+
+                editContent.requestFocus()
+                editContent.setText(it.content)
+            }
+
+        }
     }
+
 }

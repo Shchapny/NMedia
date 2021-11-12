@@ -1,25 +1,35 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.DisplayCount
+import ru.netology.nmedia.MainActivity
 import ru.netology.nmedia.R
+import ru.netology.nmedia.R.id
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Post
 
 val displayCount = DisplayCount()
 
+interface PostActionListener {
+    fun edit(post: Post)
+    fun remove(post: Post)
+    fun like(post: Post)
+    fun share(post: Post)
+}
+
 class PostAdapter(
-    private val onPostLiked: (Post) -> Unit,
-    private val onPostShared: (Post) -> Unit
+    private val listener: PostActionListener
 ) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
         val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return PostViewHolder(binding, onPostLiked, onPostShared)
+        return PostViewHolder(binding, listener)
     }
 
     override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
@@ -29,8 +39,7 @@ class PostAdapter(
 
 class PostViewHolder(
     private val binding: CardPostBinding,
-    private val onPostLiked: (Post) -> Unit,
-    private val onPostShared: (Post) -> Unit
+    private val listener: PostActionListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
     fun bind(post: Post) {
@@ -50,12 +59,32 @@ class PostViewHolder(
             )
 
             likes.setOnClickListener {
-                onPostLiked(post)
+                listener.like(post)
             }
 
             share.setOnClickListener {
-                onPostShared(post)
+                listener.share(post)
             }
+
+            menu.setOnClickListener {
+                PopupMenu(it.context, it).apply {
+                    inflate(R.menu.posts_menu)
+                    setOnMenuItemClickListener { item ->
+                        when(item.itemId) {
+                            id.remove -> {
+                                listener.remove(post)
+                                true
+                            }
+                            id.edit -> {
+                                listener.edit(post)
+                                true
+                            }
+                            else -> false
+                        }
+                    }
+                }.show()
+            }
+
         }
     }
 }
