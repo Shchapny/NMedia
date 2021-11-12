@@ -60,6 +60,7 @@ class MainActivity : AppCompatActivity() {
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
+                group.visibility = View.GONE
             }
 
             close.setOnClickListener {
