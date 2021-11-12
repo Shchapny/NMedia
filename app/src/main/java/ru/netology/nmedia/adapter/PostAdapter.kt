@@ -1,14 +1,12 @@
 package ru.netology.nmedia.adapter
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.DisplayCount
-import ru.netology.nmedia.MainActivity
 import ru.netology.nmedia.R
 import ru.netology.nmedia.R.id
 import ru.netology.nmedia.databinding.CardPostBinding

@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun share(post: Post) {
+
                     viewModel.share(post.id)
                 }
 
@@ -64,6 +65,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             close.setOnClickListener {
+                viewModel.add()
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
@@ -81,5 +83,4 @@ class MainActivity : AppCompatActivity() {
 
         }
     }
-
 }
