@@ -59,10 +59,11 @@
 
     <TextView
         android:id="@+id/content"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
         android:autoLink="web"
+        android:lineSpacingMultiplier="1.5"
         android:textColorLink="@color/purple_500"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -92,7 +93,7 @@
 
     <TextView
         android:id="@+id/textLikes"
-        android:layout_width="wrap_content"
+        android:layout_width="38dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
         app:layout_constraintStart_toEndOf="@+id/likes"
@@ -104,6 +105,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
+        android:layout_marginStart="0dp"
         android:background="@android:color/transparent"
         android:minWidth="48dp"
         android:minHeight="48dp"
