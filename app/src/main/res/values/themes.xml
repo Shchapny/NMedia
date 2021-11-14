@@ -13,4 +13,15 @@
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <style name="LikeButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:checkable">true</item>
+        <item name="iconTint">@color/like_color_selector</item>
+        <item name="icon">@drawable/like_selector</item>
+    </style>
+
+    <style name="ShareAndOptionsButton" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:checkable">true</item>
+        <item name="iconTint">@color/other_color_selector</item>
+    </style>
 </resources>
