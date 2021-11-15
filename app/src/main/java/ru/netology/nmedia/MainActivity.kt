@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
             object : PostActionListener {
                 override fun edit(post: Post) {
                     viewModel.edit(post)
-                    binding.group.visibility = View.VISIBLE
+                    binding.boxEdit.visibility = View.VISIBLE
+                    binding.textInfoEdit.text = post.content
                 }
 
                 override fun remove(post: Post) {
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun share(post: Post) {
-
                     viewModel.share(post.id)
                 }
 
@@ -61,7 +61,7 @@ class MainActivity : AppCompatActivity() {
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
-                group.visibility = View.GONE
+                boxEdit.visibility = View.GONE
             }
 
             close.setOnClickListener {
@@ -69,7 +69,7 @@ class MainActivity : AppCompatActivity() {
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
-                group.visibility = View.GONE
+                boxEdit.visibility = View.GONE
             }
 
             viewModel.edited.observe(this@MainActivity) {

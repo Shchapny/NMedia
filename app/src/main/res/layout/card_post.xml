@@ -46,7 +46,7 @@
         style="@style/ShareAndOptionsButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:icon="@drawable/ic_more_24" />
+        app:icon="@drawable/ic_more_48" />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/barrier1"
@@ -93,7 +93,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="0dp"
         android:layout_marginTop="@dimen/offset"
-        app:icon="@drawable/ic_share_24"
+        app:icon="@drawable/ic_share_48"
         app:layout_constraintStart_toEndOf="@+id/likes"
         app:layout_constraintTop_toBottomOf="@id/barrier2" />
 
@@ -108,7 +108,7 @@
         android:minHeight="48dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/barrier2"
-        app:srcCompat="@drawable/ic_baseline_visibility_24"
+        app:srcCompat="@drawable/ic_baseline_visibility_48"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <TextView
@@ -121,6 +121,5 @@
         app:layout_constraintStart_toEndOf="@id/views"
         app:layout_constraintTop_toTopOf="@id/views"
         tools:text="@sample/posts.json/data/views" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

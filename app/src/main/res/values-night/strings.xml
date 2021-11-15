@@ -2,5 +2,6 @@
 <resources>
     <string name="remove_post">Remove</string>
     <string name="blank_content_error">Content is blank</string>
-    <string name="edit_post">edit_post</string>
+    <string name="edit_post">Edit</string>
+    <string name="edit_info">Editing</string>
 </resources>

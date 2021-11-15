@@ -5,4 +5,5 @@
     <string name="remove_post">Удалить</string>
     <string name="blank_content_error">Пустой ввод</string>
     <string name="edit_post">Редактировать</string>
+    <string name="edit_info">Редактирование</string>
 </resources>
