@@ -26,7 +26,8 @@ class MainActivity : AppCompatActivity() {
             object : PostActionListener {
                 override fun edit(post: Post) {
                     viewModel.edit(post)
-                    binding.group.visibility = View.VISIBLE
+                    binding.boxEdit.visibility = View.VISIBLE
+                    binding.textInfoEdit.text = post.content
                 }
 
                 override fun remove(post: Post) {
@@ -38,7 +39,6 @@ class MainActivity : AppCompatActivity() {
                 }
 
                 override fun share(post: Post) {
-
                     viewModel.share(post.id)
                 }
 
@@ -49,11 +49,12 @@ class MainActivity : AppCompatActivity() {
         viewModel.data.observe(this, adapter::submitList)
 
         with(binding) {
-            add.setOnClickListener {
+
+            textLayout.setEndIconOnClickListener {
                 val text = editContent.text?.toString()
                 if (text.isNullOrBlank()) {
                     Toast.makeText(this@MainActivity, getString(R.string.blank_content_error), Toast.LENGTH_SHORT).show()
-                    return@setOnClickListener
+                    return@setEndIconOnClickListener
                 }
                 viewModel.editContent(text)
                 viewModel.add()
@@ -61,7 +62,7 @@ class MainActivity : AppCompatActivity() {
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
-                group.visibility = View.GONE
+                boxEdit.visibility = View.GONE
             }
 
             close.setOnClickListener {
@@ -69,7 +70,7 @@ class MainActivity : AppCompatActivity() {
                 editContent.setText("")
                 editContent.clearFocus()
                 AndroidUtils.hideKeyboard(editContent)
-                group.visibility = View.GONE
+                boxEdit.visibility = View.GONE
             }
 
             viewModel.edited.observe(this@MainActivity) {
@@ -80,7 +81,6 @@ class MainActivity : AppCompatActivity() {
                 editContent.requestFocus()
                 editContent.setText(it.content)
             }
-
         }
     }
 }
