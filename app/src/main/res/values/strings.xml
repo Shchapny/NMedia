@@ -5,4 +5,9 @@
     <string name="blank_content_error">Content is blank</string>
     <string name="edit_post">Edit</string>
     <string name="edit_info">Editing</string>
+    <string name="chooser_share_post">Share</string>
+    <string name="error_empty_content">No message specified</string>
+    <string name="description_post_save">Save</string>
+    <string name="add_post">Add post</string>
+    <string name="description_post_close_edit">Close edit</string>
 </resources>
