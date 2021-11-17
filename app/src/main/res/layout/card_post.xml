@@ -75,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="content" />
+        app:constraint_referenced_ids="content, video, play" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/likes"
@@ -121,5 +121,37 @@
         app:layout_constraintStart_toEndOf="@id/views"
         app:layout_constraintTop_toTopOf="@id/views"
         tools:text="@sample/posts.json/data/views" />
+
+    <ImageView
+        android:id="@+id/video"
+        android:layout_width="match_parent"
+        android:layout_height="240dp"
+        android:layout_marginTop="5dp"
+        android:autoLink="web"
+        android:clickable="true"
+        android:background="@drawable/spiderman"
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@+id/content" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/play"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:clickable="true"
+        android:contentDescription="@string/description_post_save"
+        app:layout_constraintBottom_toBottomOf="@+id/video"
+        app:layout_constraintEnd_toEndOf="@+id/video"
+        app:layout_constraintStart_toStartOf="@+id/video"
+        app:layout_constraintTop_toTopOf="@+id/video"
+        app:srcCompat="@drawable/ic_play_video_24"
+        tools:ignore="NotSibling" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupVideo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="play,video"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -6,4 +6,9 @@
     <string name="blank_content_error">Пустой ввод</string>
     <string name="edit_post">Редактировать</string>
     <string name="edit_info">Редактирование</string>
+    <string name="chooser_share_post">Поделиться</string>
+    <string name="error_empty_content">Пустой текст</string>
+    <string name="description_post_save">Сохранить</string>
+    <string name="add_post">Добавить пост</string>
+    <string name="description_post_close_edit">Отменить редактирование</string>
 </resources>

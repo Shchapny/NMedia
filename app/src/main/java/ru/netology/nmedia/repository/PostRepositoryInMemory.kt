@@ -80,7 +80,8 @@ class PostRepositoryInMemory : PostRepository {
             published = "22 сентября в 10:14",
             likedByMe = false,
             likes = 285,
-            share = 15414545
+            share = 15414545,
+            video = "https://www.youtube.com/watch?v=ilbu9qM4evQ"
         ),
         Post(
             id = nextId++,
