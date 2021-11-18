@@ -14,6 +14,7 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
 
     private var posts = emptyList<Post>()
     private val data = MutableLiveData(posts)
+    private var nextId = 1L
 
     private val gson = Gson()
     private val filename = "posts.json"
@@ -67,9 +68,10 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
     override fun add(post: Post) {
         if (post.id == 0L) {
             posts = listOf(
-                post.copy(id = posts.firstOrNull()?.id?.inc() ?: 0)
+                post.copy(id = nextId++)
             ) + posts
             data.value = posts
+            sync()
             return
         }
         posts = posts.map {
