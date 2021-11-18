@@ -9,7 +9,6 @@ class NewPostResultContract: ActivityResultContract<Unit, String?>() {
 
     override fun createIntent(context: Context, input: Unit): Intent =
         Intent(context, NewPostOrEditPostActivity::class.java)
-            .setAction(Intent.ACTION_SEND)
 
     override fun parseResult(resultCode: Int, intent: Intent?): String? =
        if (resultCode == Activity.RESULT_OK) {

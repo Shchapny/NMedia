@@ -126,7 +126,9 @@ class PostRepositoryInMemory : PostRepository {
 
     override fun add(post: Post) {
         if (post.id == 0L) {
-            posts = listOf(post.copy(id = posts.firstOrNull()?.id?.inc() ?: 0)) + posts
+            posts = listOf(
+                post.copy(id = posts.firstOrNull()?.id?.inc() ?: 0)
+            ) + posts
             data.value = posts
             return
         }
