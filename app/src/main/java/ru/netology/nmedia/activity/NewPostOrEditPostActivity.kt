@@ -41,19 +41,17 @@ class NewPostOrEditPostActivity : AppCompatActivity() {
 
                 viewModel.editContent(text.toString())
                 viewModel.add()
-
                 binding.edit.setText("")
                 binding.edit.clearFocus()
                 AndroidUtils.hideKeyboard(binding.edit)
-
             }
             finish()
         }
 
         binding.close.setOnClickListener {
-            viewModel.add()
             binding.edit.setText("")
             binding.edit.clearFocus()
+            viewModel.add()
             AndroidUtils.hideKeyboard(binding.edit)
             finish()
         }
