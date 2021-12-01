@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nmedia.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.R.id
-import ru.netology.nmedia.databinding.CardPostBinding
+import ru.netology.nmedia.databinding.CardPostFragmentBinding
 import ru.netology.nmedia.dto.Post
 
 val displayCount = DisplayCount()
@@ -21,6 +21,7 @@ interface PostActionListener {
     fun like(post: Post)
     fun share(post: Post)
     fun playVideo(post: Post)
+    fun showPost(post: Post)
 }
 
 class PostAdapter(
@@ -28,7 +29,7 @@ class PostAdapter(
 ) : ListAdapter<Post, PostViewHolder>(PostDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val binding = CardPostBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        val binding = CardPostFragmentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return PostViewHolder(binding, listener)
     }
 
@@ -38,7 +39,7 @@ class PostAdapter(
 }
 
 class PostViewHolder(
-    private val binding: CardPostBinding,
+    private val binding: CardPostFragmentBinding,
     private val listener: PostActionListener
 ) : RecyclerView.ViewHolder(binding.root) {
 
@@ -84,6 +85,10 @@ class PostViewHolder(
 
             play.setOnClickListener {
                 listener.playVideo(post)
+            }
+
+            showPost.setOnClickListener {
+                listener.showPost(post)
             }
             if (post.video != null) groupVideo.visibility = View.VISIBLE else groupVideo.visibility = View.GONE
         }

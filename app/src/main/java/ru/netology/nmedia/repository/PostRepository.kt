@@ -9,4 +9,5 @@ interface PostRepository {
     fun removeById(id: Long)
     fun get(): LiveData<List<Post>>
     fun add(post: Post)
+    fun video()
 }

@@ -39,4 +39,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = post
     }
 
+    fun video(post: Post) = repository.video()
+
 }

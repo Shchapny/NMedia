@@ -82,6 +82,10 @@ class PostRepositoryFileImpl(private val context: Context) : PostRepository {
         sync()
     }
 
+    override fun video() {
+        data.value = posts
+    }
+
     private fun sync() {
         context.openFileOutput(filename, Context.MODE_PRIVATE).bufferedWriter().use {
             it.write(gson.toJson(posts))
