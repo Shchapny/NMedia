@@ -47,15 +47,17 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                         setOnMenuItemClickListener { item ->
                             when (item.itemId) {
                                 R.id.remove -> {
-                                    viewModel.remove(it.id.toLong())
-                                    findNavController().navigateUp()
+                                    findNavController().navigate(
+                                        R.id.action_showPostFragment_to_feedFragment,
+                                        Bundle().apply { viewModel.remove(post.id) })
                                     true
                                 }
                                 R.id.edit -> {
                                     findNavController().navigate(
-                                        R.id.action_newPostFragment_to_feedFragment,
+                                        R.id.action_showPostFragment_to_newPostFragment,
                                         Bundle().apply {
                                             textArg = content.text.toString()
+                                            viewModel.edit(post)
                                         })
                                     true
                                 }
