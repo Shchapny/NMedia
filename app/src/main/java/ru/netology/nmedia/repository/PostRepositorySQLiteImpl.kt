@@ -43,9 +43,8 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
     override fun get(): LiveData<List<Post>> = data
 
     override fun add(post: Post) {
-        val saved = dao.save(post)
-        val posts = checkNotNull(data.value).filter { it.id != post.id }
-        data.value = listOf(saved) + posts
+        dao.save(post)
+        data.value = dao.getAll()
     }
 
 
