@@ -5,13 +5,14 @@ import androidx.lifecycle.MutableLiveData
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
 
-class PostRepositorySQLiteImpl(private val dao: PostDao): PostRepository {
+class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
 
     private val data = MutableLiveData<List<Post>>(emptyList())
 
     init {
         data.value = dao.getAll()
     }
+
     override fun shareById(id: Long) {
         dao.shareById(id)
         val posts = checkNotNull(data.value).map {
@@ -42,19 +43,11 @@ class PostRepositorySQLiteImpl(private val dao: PostDao): PostRepository {
     override fun get(): LiveData<List<Post>> = data
 
     override fun add(post: Post) {
-        val id = post.id
         val saved = dao.save(post)
-
-        val currentPosts = checkNotNull(data.value)
-        val newPosts = if (id == 0L) {
-            listOf(saved) + currentPosts
-        } else {
-            currentPosts.map {
-                if (it.id != id) it else saved
-            }
-        }
-        data.value = newPosts
+        val posts = checkNotNull(data.value).filter { it.id != post.id }
+        data.value = listOf(saved) + posts
     }
+
 
     override fun video() {
         dao.video()
