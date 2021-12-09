@@ -55,6 +55,5 @@ data class Post(
     }
 }
 
-private val date = Calendar.getInstance().time!!
-private val formatter = SimpleDateFormat.getDateTimeInstance()!! //or use getDateInstance()
-private val formattedDate = formatter.format(date)!!
+private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
+    .format(Calendar.getInstance().time!!)!!
