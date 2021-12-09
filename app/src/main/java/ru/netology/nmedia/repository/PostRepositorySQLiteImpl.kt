@@ -25,7 +25,7 @@ class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
     }
 
     override fun add(post: Post) {
-        dao.insert(PostEntity.fromDto(post))
+        dao.save(PostEntity.fromDto(post))
     }
 
     override fun video() {
