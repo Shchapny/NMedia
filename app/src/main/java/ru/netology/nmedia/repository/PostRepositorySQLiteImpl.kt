@@ -1,56 +1,34 @@
 package ru.netology.nmedia.repository
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.entity.PostEntity
 
 class PostRepositorySQLiteImpl(private val dao: PostDao) : PostRepository {
 
-    private val data = MutableLiveData<List<Post>>(emptyList())
-
-    init {
-        data.value = dao.getAll()
-    }
-
     override fun shareById(id: Long) {
         dao.shareById(id)
-        val posts = checkNotNull(data.value).map {
-            if (it.id != id) it else it.copy(
-                share = it.share + 1
-            )
-        }
-        data.value = posts
     }
 
     override fun likeById(id: Long) {
         dao.likeById(id)
-        val posts = checkNotNull(data.value).map {
-            if (it.id != id) it else it.copy(
-                likedByMe = !it.likedByMe,
-                likes = if (it.likedByMe) it.likes - 1 else it.likes + 1
-            )
-        }
-        data.value = posts
     }
 
     override fun removeById(id: Long) {
         dao.removeById(id)
-        val posts = checkNotNull(data.value).filter { it.id != id }
-        data.value = posts
     }
 
-    override fun get(): LiveData<List<Post>> = data
+    override fun get(): LiveData<List<Post>> = dao.getAll().map {
+        it.map(PostEntity::toDto)
+    }
 
     override fun add(post: Post) {
-        dao.save(post)
-        data.value = dao.getAll()
+        dao.insert(PostEntity.fromDto(post))
     }
-
 
     override fun video() {
         dao.video()
-        val posts = checkNotNull(data.value)
-        data.value = posts
     }
 }
