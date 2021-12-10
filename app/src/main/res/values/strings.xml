@@ -10,4 +10,11 @@
     <string name="description_post_save">Save</string>
     <string name="add_post">Add post</string>
     <string name="description_post_close_edit">Close edit</string>
+    <string name="google_play_unavailable">Google Api Unavailable</string>
+    <string name="channel_remote_name">Server notifications</string>
+    <string name="channel_remote_description">Notifications from remote server</string>
+    <string name="notification_user_liked">User %1$s liked %2$s\'s post</string>
+    <string name="notification_user_post">%1$s published a new post:</string>
+    <string name="notification_fail">Error receiving data</string>
+    <string name="notification_content_post">%1$s</string>
 </resources>
