@@ -11,4 +11,11 @@
     <string name="description_post_save">Сохранить</string>
     <string name="add_post">Добавить пост</string>
     <string name="description_post_close_edit">Отменить редактирование</string>
+    <string name="google_play_unavailable">Google Api Недоступен</string>
+    <string name="channel_remote_name">Уведомления с сервера</string>
+    <string name="channel_remote_description">Уведомления с удаленного сервера</string>
+    <string name="notification_user_liked">%1$s поставил лайк посту %2$s</string>
+    <string name="notification_user_post">%1$s опубликовал новый пост:</string>
+    <string name="notification_fail">Ошибка при получении данных</string>
+    <string name="notification_content_post">%1$s</string>
 </resources>
