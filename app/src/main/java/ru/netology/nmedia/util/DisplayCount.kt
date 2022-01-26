@@ -1,4 +1,4 @@
-package ru.netology.nmedia
+package ru.netology.nmedia.util
 
 import kotlin.math.ln
 import kotlin.math.pow

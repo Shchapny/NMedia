@@ -9,7 +9,7 @@ data class Post(
     val id: Long = 0,
     val author: String = "Нетология. Университет интернет-профессий будущего",
     val content: String = "",
-    val published: String = formattedDate,
+    val published: String = "",
     val likedByMe: Boolean = false,
     val views: Long = 0,
     val likes: Long = 0,

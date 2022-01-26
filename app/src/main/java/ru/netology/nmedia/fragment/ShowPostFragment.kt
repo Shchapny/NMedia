@@ -8,7 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import ru.netology.nmedia.DisplayCount
+import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostFragmentBinding
 import ru.netology.nmedia.dto.Post
@@ -35,7 +35,7 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
         arguments?.showOnePost?.let { id ->
             viewModel.data.observe(viewLifecycleOwner) { post ->
                 with(binding) {
-                    post.filter { id == it.id }.map { post ->
+                    post.posts.filter { id == it.id }.map { post: Post ->
                         author.text = post.author
                         published.text = post.published
                         content.text = post.content
@@ -69,7 +69,8 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                             }.show()
                         }
                         likes.setOnClickListener {
-                            viewModel.like(post.id)
+                            if (!post.likedByMe) viewModel.like(post.id)
+                            else viewModel.unlikeById(post.id)
                         }
                         share.setOnClickListener {
                             viewModel.share(post.id)

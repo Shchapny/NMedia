@@ -7,7 +7,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.nmedia.DisplayCount
+import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.R.id
 import ru.netology.nmedia.databinding.CardPostFragmentBinding
