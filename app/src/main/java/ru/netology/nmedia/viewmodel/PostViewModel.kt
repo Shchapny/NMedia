@@ -48,10 +48,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()
                     .map {
-                        it.copy(
-                            likes = it.likes + 1,
-                            likedByMe = true
-                        )
+                        if (it.id == id) {
+                            it.copy(
+                                likes = it.likes + 1,
+                                likedByMe = true
+                            )
+                        } else {
+                            it
+                        }
                     })
             )
             try {
@@ -68,9 +72,13 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()
                     .map {
-                        it.copy(
-                            share = it.share + 1
-                        )
+                        if (it.id == id) {
+                            it.copy(
+                                share = it.share + 1
+                            )
+                        } else {
+                            it
+                        }
                     })
             )
             try {
@@ -93,7 +101,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: IOException) {
                 _data.postValue(_data.value?.copy(posts = old))
             }
-
         }
     }
 
@@ -127,10 +134,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             _data.postValue(
                 _data.value?.copy(posts = _data.value?.posts.orEmpty()
                     .map {
-                        it.copy(
-                            likes = it.likes - 1,
-                            likedByMe = false
-                        )
+                        if (it.id == id) {
+                            it.copy(
+                                likes = it.likes - 1,
+                                likedByMe = false
+                            )
+                        } else {
+                            it
+                        }
                     })
             )
             try {
@@ -138,6 +149,20 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             } catch (e: IOException) {
                 _data.postValue(_data.value?.copy(posts = old))
             }
+        }
+    }
+
+    fun refresh() {
+        thread {
+            _data.postValue(
+                _data.value?.copy(refreshing = true)
+            )
+            try {
+                val posts = repository.get()
+                FeedModel(posts = posts, empty = posts.isEmpty())
+            } catch (e: IOException) {
+                FeedModel(error = true)
+            }.also(_data::postValue)
         }
     }
 }

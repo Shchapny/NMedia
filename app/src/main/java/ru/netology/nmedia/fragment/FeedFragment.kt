@@ -75,12 +75,13 @@ class FeedFragment : Fragment(R.layout.feed) {
         )
 
         binding.container.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner, { state ->
+        viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
             binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
-        })
+            binding.swipeRefresh.isRefreshing = state.refreshing
+        }
 
         binding.retryButton.setOnClickListener {
             viewModel.loadPosts()
@@ -93,8 +94,7 @@ class FeedFragment : Fragment(R.layout.feed) {
         }
 
         binding.swipeRefresh.setOnRefreshListener {
-            viewModel.loadPosts()
-            binding.swipeRefresh.isRefreshing = false
+            viewModel.refresh()
         }
     }
 }
