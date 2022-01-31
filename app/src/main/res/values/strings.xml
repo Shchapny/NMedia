@@ -17,4 +17,7 @@
     <string name="notification_user_post">%1$s published a new post:</string>
     <string name="notification_fail">Error receiving data</string>
     <string name="notification_content_post">%1$s</string>
+    <string name="error_loading">Something went wrong. Try again later</string>
+    <string name="retry_loading">Retry</string>
+    <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
 </resources>

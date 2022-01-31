@@ -30,7 +30,10 @@ class NewPostOrEditPostFragment : Fragment(R.layout.new_post_or_edit_post) {
             viewModel.editContent(binding.edit.text.toString())
             viewModel.add()
             AndroidUtils.hideKeyboard(requireView())
-            findNavController().navigate(R.id.action_newPostFragment_to_feedFragment)
+        }
+        viewModel.postCreated.observe(viewLifecycleOwner) {
+            viewModel.loadPosts()
+            findNavController().navigateUp()
         }
     }
 
