@@ -66,24 +66,31 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun share(id: Long) {
+
         repository.shareById(id, object : PostRepository.GetIdCallback {
             override fun onSuccess(id: Long) {
-                _data.postValue(
-                    _data.value?.copy(posts = _data.value?.posts.orEmpty()
-                        .map {
-                            if (it.id == id) {
-                                it.copy(
-                                    share = it.share + 1
-                                )
-                            } else {
-                                it
-                            }
-                        })
-                )
+                /*
+                    _data.postValue(
+                        _data.value?.copy(posts = _data.value?.posts.orEmpty()
+                            .map {
+                                if (it.id == id) {
+                                    it.copy(
+                                        share = it.share + 1
+                                    )
+                                } else {
+                                    it
+                                }
+                            })
+                    )
+                    */
             }
 
+
             override fun onError(e: Exception) {
-                _data.postValue(FeedModel(error = true))
+                /*
+                    _data.postValue(FeedModel(error = true))
+
+                 */
             }
         })
     }

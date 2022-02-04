@@ -23,6 +23,8 @@ class PostRepositoryImpl : PostRepository {
     }
 
     override fun shareById(id: Long, callback: PostRepository.GetIdCallback) {
+     /* Данный метод не реализован на сервере
+
         val request = Request.Builder()
             .post(gson.toJson(id).toRequestBody(jsonType))
             .url("${BASE_URL}/api/slow/posts/$id/share")
@@ -38,7 +40,9 @@ class PostRepositoryImpl : PostRepository {
                     callback.onSuccess(id)
                 }
             })
+      */
     }
+
 
     override fun likeById(id: Long, callback: PostRepository.GetIdCallback) {
         val request = Request.Builder()
