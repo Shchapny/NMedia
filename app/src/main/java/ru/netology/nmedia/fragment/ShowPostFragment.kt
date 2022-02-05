@@ -8,6 +8,7 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostFragmentBinding
@@ -27,6 +28,8 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
     private val viewModel by viewModels<PostViewModel>(
         ownerProducer = ::requireParentFragment
     )
+
+    val url = "http://10.0.2.2:9999"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -102,6 +105,21 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                         }
                         if (post.video != null) groupVideo.visibility = View.VISIBLE
                         else groupVideo.visibility = View.GONE
+
+                        Glide.with(avatar)
+                            .load("$url/avatars/${post.authorAvatar}")
+                            .placeholder(R.drawable.ic_loading_48)
+                            .error(R.drawable.ic_error_48)
+                            .circleCrop()
+                            .timeout(10_000)
+                            .into(avatar)
+
+                        Glide.with(video)
+                            .load("$url/images/${post.attachment?.url}")
+                            .placeholder(R.drawable.ic_loading_48)
+                            .error(R.drawable.ic_error_48)
+                            .timeout(10_000)
+                            .into(video)
                     }
                 }
             }

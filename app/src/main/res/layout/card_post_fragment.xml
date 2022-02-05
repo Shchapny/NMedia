@@ -157,6 +157,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:constraint_referenced_ids="play,video" />
+        app:constraint_referenced_ids="play" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

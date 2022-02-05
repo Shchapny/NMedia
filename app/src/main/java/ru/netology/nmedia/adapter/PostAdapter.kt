@@ -7,6 +7,7 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.R.id
@@ -91,6 +92,24 @@ class PostViewHolder(
                 listener.showPost(post)
             }
             if (post.video != null) groupVideo.visibility = View.VISIBLE else groupVideo.visibility = View.GONE
+
+            val url = "http://10.0.2.2:9999"
+
+            Glide.with(avatar)
+                .load("$url/avatars/${post.authorAvatar}")
+                .placeholder(R.drawable.ic_loading_48)
+                .error(R.drawable.ic_error_48)
+                .circleCrop()
+                .timeout(10_000)
+                .into(avatar)
+            if (post.attachment != null) {
+                Glide.with(video)
+                    .load("$url/images/${post.attachment?.url}")
+                    .placeholder(R.drawable.ic_loading_48)
+                    .error(R.drawable.ic_error_48)
+                    .timeout(10_000)
+                    .into(video)
+            } else video.visibility = View.GONE
         }
     }
 }

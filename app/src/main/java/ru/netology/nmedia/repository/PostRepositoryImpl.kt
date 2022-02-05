@@ -22,6 +22,8 @@ class PostRepositoryImpl : PostRepository {
         private val jsonType = "application/json".toMediaType()
     }
 
+
+
     override fun shareById(id: Long, callback: PostRepository.GetIdCallback) {
      /* Данный метод не реализован на сервере
 
