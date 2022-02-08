@@ -22,8 +22,6 @@ class PostRepositoryImpl : PostRepository {
         private val jsonType = "application/json".toMediaType()
     }
 
-
-
     override fun shareById(id: Long, callback: PostRepository.GetIdCallback) {
      /* Данный метод не реализован на сервере
 
@@ -44,7 +42,6 @@ class PostRepositoryImpl : PostRepository {
             })
       */
     }
-
 
     override fun likeById(id: Long, callback: PostRepository.GetIdCallback) {
         val request = Request.Builder()

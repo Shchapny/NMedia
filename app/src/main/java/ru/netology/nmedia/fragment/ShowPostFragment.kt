@@ -8,18 +8,20 @@ import android.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import com.bumptech.glide.Glide
-import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.CardPostFragmentBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.fragment.NewPostOrEditPostFragment.Companion.textArg
+import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.PostArg
+import ru.netology.nmedia.util.loadImage
 import ru.netology.nmedia.viewmodel.PostViewModel
+
 
 class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
 
-    val displayCount = DisplayCount()
+    private val displayCount = DisplayCount()
+    private val url = "http://10.0.2.2:9999"
 
     companion object {
         var Bundle.showOnePost: Long by PostArg
@@ -28,8 +30,6 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
     private val viewModel by viewModels<PostViewModel>(
         ownerProducer = ::requireParentFragment
     )
-
-    val url = "http://10.0.2.2:9999"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,6 +45,13 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                         likes.text = displayCount.display(post.likes)
                         share.text = displayCount.display(post.share)
                         likes.isChecked = post.likedByMe
+                        avatar.loadImage(url, "avatars", post.authorAvatar)
+                        if (post.attachment != null) video.loadImage(
+                            url,
+                            "images",
+                            post.attachment?.url
+                        )
+                        else video.visibility = View.GONE
 
                         menu.setOnClickListener {
                             PopupMenu(it.context, it).apply {
@@ -105,21 +112,6 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                         }
                         if (post.video != null) groupVideo.visibility = View.VISIBLE
                         else groupVideo.visibility = View.GONE
-
-                        Glide.with(avatar)
-                            .load("$url/avatars/${post.authorAvatar}")
-                            .placeholder(R.drawable.ic_loading_48)
-                            .error(R.drawable.ic_error_48)
-                            .circleCrop()
-                            .timeout(10_000)
-                            .into(avatar)
-
-                        Glide.with(video)
-                            .load("$url/images/${post.attachment?.url}")
-                            .placeholder(R.drawable.ic_loading_48)
-                            .error(R.drawable.ic_error_48)
-                            .timeout(10_000)
-                            .into(video)
                     }
                 }
             }
