@@ -43,7 +43,6 @@ class PostRepositoryImpl : PostRepository {
       */
     }
 
-
     override fun likeById(id: Long, callback: PostRepository.GetIdCallback) {
         val request = Request.Builder()
             .post(gson.toJson(id).toRequestBody(jsonType))
