@@ -30,7 +30,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun loadPosts() {
         _data.value = FeedModel(loading = true)
-        repository.getAllAsync(object : PostRepository.GetAllCallback {
+        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
             override fun onSuccess(posts: List<Post>) {
                 _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
             }
@@ -42,8 +42,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun like(id: Long) {
-        repository.likeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.likeById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .map {
@@ -66,9 +66,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun share(id: Long) {
-
-        repository.shareById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.shareById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 /*
                     _data.postValue(
                         _data.value?.copy(posts = _data.value?.posts.orEmpty()
@@ -97,8 +96,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun remove(id: Long) {
         val old = _data.value?.posts.orEmpty()
-        repository.removeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.removeById(id, object : PostRepository.Callback<Unit> {
+            override fun onSuccess(value: Unit) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .filter {
@@ -109,6 +108,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
             override fun onError(e: Exception) {
                 _data.postValue(_data.value?.copy(posts = old))
+                _data.postValue(FeedModel(error = true))
             }
         })
     }
@@ -121,15 +121,16 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = formatted)
     }
 
-    fun add() {
+    fun save() {
         edited.value?.let {
-            repository.add(it, object : PostRepository.GetPostCallback {
+            repository.save(it, object : PostRepository.Callback<Post> {
                 override fun onSuccess(post: Post) {
                     _postCreated.postValue(Unit)
                 }
 
                 override fun onError(e: Exception) {
                     edited.value = empty
+                    _data.postValue(FeedModel(error = true))
                 }
             })
         }
@@ -142,8 +143,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun video(post: Post) = repository.video()
 
     fun unlikeById(id: Long) {
-        repository.unlikeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.unlikeById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .map {
@@ -167,7 +168,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun refresh() {
         _data.value = FeedModel(refreshing = true)
-        repository.getAllAsync(object : PostRepository.GetAllCallback {
+        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
             override fun onSuccess(posts: List<Post>) {
                 _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
             }
