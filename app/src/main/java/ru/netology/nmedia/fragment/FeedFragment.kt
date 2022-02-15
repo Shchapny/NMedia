@@ -83,10 +83,11 @@ class FeedFragment : Fragment(R.layout.feed) {
             binding.swipeRefresh.isRefreshing = state.refreshing
             if (state.error) {
                 Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry_loading) { viewModel.loadPosts() }
+                    .setAction(R.string.retry_loading) { viewModel.retry() }
                     .show()
             }
         }
+
 
 //        binding.retryButton.setOnClickListener {
 //            viewModel.loadPosts()

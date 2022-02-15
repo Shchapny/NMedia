@@ -24,6 +24,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+    private var nameError: String? = null
+    private var postId: Long? = null
+
     init {
         loadPosts()
     }
@@ -42,6 +45,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun like(id: Long) {
+        postId = id
         repository.likeById(id, object : PostRepository.Callback<Post> {
             override fun onSuccess(post: Post) {
                 _data.postValue(
@@ -60,6 +64,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = "like"
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -84,7 +89,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     */
             }
 
-
             override fun onError(e: Exception) {
                 /*
                     _data.postValue(FeedModel(error = true))
@@ -95,6 +99,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun remove(id: Long) {
+        postId = id
         val old = _data.value?.posts.orEmpty()
         repository.removeById(id, object : PostRepository.Callback<Unit> {
             override fun onSuccess(value: Unit) {
@@ -107,6 +112,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = "remove"
                 _data.postValue(_data.value?.copy(posts = old))
                 _data.postValue(FeedModel(error = true))
             }
@@ -129,6 +135,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Exception) {
+                    nameError = "save"
                     edited.value = empty
                     _data.postValue(FeedModel(error = true))
                 }
@@ -143,6 +150,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun video(post: Post) = repository.video()
 
     fun unlikeById(id: Long) {
+        postId = id
         repository.unlikeById(id, object : PostRepository.Callback<Post> {
             override fun onSuccess(post: Post) {
                 _data.postValue(
@@ -161,6 +169,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = "dislike"
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -177,5 +186,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 _data.postValue(FeedModel(error = true))
             }
         })
+    }
+
+    fun retry() {
+        when (nameError) {
+            "like" -> postId?.let { like(it) }
+            "remove" -> postId?.let { remove(it) }
+            "save" -> save()
+            "dislike" -> postId?.let { unlikeById(it) }
+            else -> loadPosts()
+        }
     }
 }
