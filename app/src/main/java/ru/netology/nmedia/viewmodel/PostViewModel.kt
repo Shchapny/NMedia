@@ -24,15 +24,18 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
+    private var nameError: PlaceOfError? = null
+    private var postId: Long? = null
+
     init {
         loadPosts()
     }
 
     fun loadPosts() {
         _data.value = FeedModel(loading = true)
-        repository.getAllAsync(object : PostRepository.GetAllCallback {
-            override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
+            override fun onSuccess(post: List<Post>) {
+                _data.postValue(FeedModel(posts = post, empty = post.isEmpty()))
             }
 
             override fun onError(e: Exception) {
@@ -42,8 +45,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun like(id: Long) {
-        repository.likeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        postId = id
+        repository.likeById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .map {
@@ -60,15 +64,15 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = PlaceOfError.LIKE
                 _data.postValue(FeedModel(error = true))
             }
         })
     }
 
     fun share(id: Long) {
-
-        repository.shareById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.shareById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 /*
                     _data.postValue(
                         _data.value?.copy(posts = _data.value?.posts.orEmpty()
@@ -85,7 +89,6 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                     */
             }
 
-
             override fun onError(e: Exception) {
                 /*
                     _data.postValue(FeedModel(error = true))
@@ -96,9 +99,10 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun remove(id: Long) {
+        postId = id
         val old = _data.value?.posts.orEmpty()
-        repository.removeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        repository.removeById(id, object : PostRepository.Callback<Unit> {
+            override fun onSuccess(post: Unit) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .filter {
@@ -108,7 +112,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = PlaceOfError.REMOVE
                 _data.postValue(_data.value?.copy(posts = old))
+                _data.postValue(FeedModel(error = true))
             }
         })
     }
@@ -121,15 +127,17 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         edited.value = edited.value?.copy(content = formatted)
     }
 
-    fun add() {
+    fun save() {
         edited.value?.let {
-            repository.add(it, object : PostRepository.GetPostCallback {
+            repository.save(it, object : PostRepository.Callback<Post> {
                 override fun onSuccess(post: Post) {
                     _postCreated.postValue(Unit)
                 }
 
                 override fun onError(e: Exception) {
+                    nameError = PlaceOfError.SAVE
                     edited.value = empty
+                    _data.postValue(FeedModel(error = true))
                 }
             })
         }
@@ -142,8 +150,9 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun video(post: Post) = repository.video()
 
     fun unlikeById(id: Long) {
-        repository.unlikeById(id, object : PostRepository.GetIdCallback {
-            override fun onSuccess(id: Long) {
+        postId = id
+        repository.unlikeById(id, object : PostRepository.Callback<Post> {
+            override fun onSuccess(post: Post) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .map {
@@ -160,6 +169,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
+                nameError = PlaceOfError.DISLIKE
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -167,14 +177,31 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun refresh() {
         _data.value = FeedModel(refreshing = true)
-        repository.getAllAsync(object : PostRepository.GetAllCallback {
-            override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+        repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
+            override fun onSuccess(post: List<Post>) {
+                _data.postValue(FeedModel(posts = post, empty = post.isEmpty()))
             }
 
             override fun onError(e: Exception) {
                 _data.postValue(FeedModel(error = true))
             }
         })
+    }
+
+    fun retry() {
+        when (nameError) {
+            PlaceOfError.LIKE -> postId?.let { like(it) }
+            PlaceOfError.REMOVE -> postId?.let { remove(it) }
+            PlaceOfError.SAVE -> save()
+            PlaceOfError.DISLIKE -> postId?.let { unlikeById(it) }
+            else -> loadPosts()
+        }
+    }
+
+    enum class PlaceOfError {
+        LIKE,
+        REMOVE,
+        SAVE,
+        DISLIKE
     }
 }

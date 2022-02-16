@@ -28,7 +28,7 @@ class NewPostOrEditPostFragment : Fragment(R.layout.new_post_or_edit_post) {
 
         binding.ok.setOnClickListener {
             viewModel.editContent(binding.edit.text.toString())
-            viewModel.add()
+            viewModel.save()
             AndroidUtils.hideKeyboard(requireView())
         }
         viewModel.postCreated.observe(viewLifecycleOwner) {

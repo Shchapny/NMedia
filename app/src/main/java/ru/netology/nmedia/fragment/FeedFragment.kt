@@ -8,6 +8,7 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostActionListener
 import ru.netology.nmedia.adapter.PostAdapter
@@ -77,14 +78,20 @@ class FeedFragment : Fragment(R.layout.feed) {
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.progress.isVisible = state.loading
-            binding.errorGroup.isVisible = state.error
+//            binding.errorGroup.isVisible = state.error
             binding.emptyText.isVisible = state.empty
             binding.swipeRefresh.isRefreshing = state.refreshing
+            if (state.error) {
+                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
+                    .setAction(R.string.retry_loading) { viewModel.retry() }
+                    .show()
+            }
         }
 
-        binding.retryButton.setOnClickListener {
-            viewModel.loadPosts()
-        }
+
+//        binding.retryButton.setOnClickListener {
+//            viewModel.loadPosts()
+//        }
 
         with(binding) {
             fab.setOnClickListener {
