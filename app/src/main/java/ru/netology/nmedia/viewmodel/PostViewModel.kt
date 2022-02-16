@@ -24,7 +24,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     val postCreated: LiveData<Unit>
         get() = _postCreated
 
-    private var nameError: String? = null
+    private var nameError: PlaceOfError? = null
     private var postId: Long? = null
 
     init {
@@ -34,8 +34,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun loadPosts() {
         _data.value = FeedModel(loading = true)
         repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
-            override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+            override fun onSuccess(post: List<Post>) {
+                _data.postValue(FeedModel(posts = post, empty = post.isEmpty()))
             }
 
             override fun onError(e: Exception) {
@@ -64,7 +64,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                nameError = "like"
+                nameError = PlaceOfError.LIKE
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -102,7 +102,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         postId = id
         val old = _data.value?.posts.orEmpty()
         repository.removeById(id, object : PostRepository.Callback<Unit> {
-            override fun onSuccess(value: Unit) {
+            override fun onSuccess(post: Unit) {
                 _data.postValue(
                     _data.value?.copy(posts = _data.value?.posts.orEmpty()
                         .filter {
@@ -112,7 +112,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                nameError = "remove"
+                nameError = PlaceOfError.REMOVE
                 _data.postValue(_data.value?.copy(posts = old))
                 _data.postValue(FeedModel(error = true))
             }
@@ -135,7 +135,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
                 }
 
                 override fun onError(e: Exception) {
-                    nameError = "save"
+                    nameError = PlaceOfError.SAVE
                     edited.value = empty
                     _data.postValue(FeedModel(error = true))
                 }
@@ -169,7 +169,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             }
 
             override fun onError(e: Exception) {
-                nameError = "dislike"
+                nameError = PlaceOfError.DISLIKE
                 _data.postValue(FeedModel(error = true))
             }
         })
@@ -178,8 +178,8 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
     fun refresh() {
         _data.value = FeedModel(refreshing = true)
         repository.getAllAsync(object : PostRepository.Callback<List<Post>> {
-            override fun onSuccess(posts: List<Post>) {
-                _data.postValue(FeedModel(posts = posts, empty = posts.isEmpty()))
+            override fun onSuccess(post: List<Post>) {
+                _data.postValue(FeedModel(posts = post, empty = post.isEmpty()))
             }
 
             override fun onError(e: Exception) {
@@ -190,11 +190,18 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
     fun retry() {
         when (nameError) {
-            "like" -> postId?.let { like(it) }
-            "remove" -> postId?.let { remove(it) }
-            "save" -> save()
-            "dislike" -> postId?.let { unlikeById(it) }
+            PlaceOfError.LIKE -> postId?.let { like(it) }
+            PlaceOfError.REMOVE -> postId?.let { remove(it) }
+            PlaceOfError.SAVE -> save()
+            PlaceOfError.DISLIKE -> postId?.let { unlikeById(it) }
             else -> loadPosts()
         }
+    }
+
+    enum class PlaceOfError {
+        LIKE,
+        REMOVE,
+        SAVE,
+        DISLIKE
     }
 }
