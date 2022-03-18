@@ -55,7 +55,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun share(id: Long) { }
+    fun share(id: Long) = viewModelScope.launch {
+        try {
+            repository.shareById(id)
+            _dataState.value = FeedModelState()
+        } catch (e: Exception) {
+            _dataState.value = FeedModelState(error = true)
+        }
+    }
 
     fun remove(id: Long) = viewModelScope.launch {
         try {

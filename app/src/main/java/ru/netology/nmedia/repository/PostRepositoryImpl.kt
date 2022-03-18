@@ -14,6 +14,10 @@ import java.io.IOException
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
+    override suspend fun shareById(id: Long) {
+        dao.shareById(id)
+    }
+
     override suspend fun likeById(id: Long) {
         try {
             val response = PostApi.retrofitService.likeById(id)

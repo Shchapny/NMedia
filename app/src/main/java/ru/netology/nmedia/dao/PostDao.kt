@@ -34,4 +34,7 @@ interface PostDao {
 
     @Query("DELETE FROM PostEntity WHERE id =:id")
     suspend fun removeById(id: Long)
+
+    @Query("UPDATE PostEntity SET share = share + 1 WHERE id =:id")
+    suspend fun shareById(id: Long)
 }

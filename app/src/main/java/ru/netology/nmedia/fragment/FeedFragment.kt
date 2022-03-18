@@ -28,7 +28,6 @@ class FeedFragment : Fragment(R.layout.feed) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FeedBinding.bind(view)
 
-
         val adapter = PostAdapter(
             object : PostActionListener {
                 override fun edit(post: Post) {
