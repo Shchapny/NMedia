@@ -55,14 +55,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
-    fun share(id: Long) = viewModelScope.launch {
-        try {
-            repository.shareById(id)
-            _dataState.value = FeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = FeedModelState(error = true)
-        }
-    }
+//    fun share(id: Long) = viewModelScope.launch {
+//        try {
+//            repository.shareById(id)
+//            _dataState.value = FeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = FeedModelState(error = true)
+//        }
+//    }
 
     fun remove(id: Long) = viewModelScope.launch {
         try {
@@ -102,14 +102,14 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
 
 //    fun video(post: Post) = repository.video()
 
-    fun unlikeById(id: Long) = viewModelScope.launch {
-        try {
-            repository.unlikeById(id)
-            _dataState.value = FeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = FeedModelState(error = true)
-        }
-    }
+//    fun unlikeById(id: Long) = viewModelScope.launch {
+//        try {
+//            repository.unlikeById(id)
+//            _dataState.value = FeedModelState()
+//        } catch (e: Exception) {
+//            _dataState.value = FeedModelState(error = true)
+//        }
+//    }
 
     fun refresh() = viewModelScope.launch {
         try {
@@ -126,7 +126,7 @@ class PostViewModel(application: Application) : AndroidViewModel(application) {
             PlaceOfError.LIKE -> postId?.let { like(it) }
             PlaceOfError.REMOVE -> postId?.let { remove(it) }
             PlaceOfError.SAVE -> save()
-            PlaceOfError.DISLIKE -> postId?.let { unlikeById(it) }
+//            PlaceOfError.DISLIKE -> postId?.let { unlikeById(it) }
             else -> loadPosts()
         }
     }

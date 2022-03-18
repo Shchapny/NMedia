@@ -14,18 +14,20 @@ import java.io.IOException
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
-    override suspend fun shareById(id: Long) {
-        dao.shareById(id)
-    }
+//    override fun shareById(id: Long) {
+//        dao.shareById(id)
+//    }
 
     override suspend fun likeById(id: Long) {
         try {
-            val response = PostApi.retrofitService.likeById(id)
+            val likeById = dao.getById(id).likedByMe
+            dao.likeById(id)
+            val response =
+                if (likeById) PostApi.retrofitService.dislikeById(id)
+                else PostApi.retrofitService.likeById(id)
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-            val body =  response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body))
         } catch (e: ApiError) {
             throw e
         } catch (e: IOException) {
@@ -70,22 +72,22 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
     override suspend fun video() {}
 
-    override suspend fun unlikeById(id: Long) {
-        try {
-            val response = PostApi.retrofitService.dislikeById(id)
-            if (!response.isSuccessful) {
-                throw ApiError(response.code(), response.message())
-            }
-            val body =  response.body() ?: throw ApiError(response.code(), response.message())
-            dao.insert(PostEntity.fromDto(body))
-        } catch (e: ApiError) {
-            throw e
-        } catch (e: IOException) {
-            throw NetworkError
-        } catch (e: Exception) {
-            throw UnknownError
-        }
-    }
+//    override suspend fun unlikeById(id: Long) {
+//        try {
+//            val response = PostApi.retrofitService.dislikeById(id)
+//            if (!response.isSuccessful) {
+//                throw ApiError(response.code(), response.message())
+//            }
+//            val body = response.body() ?: throw ApiError(response.code(), response.message())
+//            dao.insert(PostEntity.fromDto(body))
+//        } catch (e: ApiError) {
+//            throw e
+//        } catch (e: IOException) {
+//            throw NetworkError
+//        } catch (e: Exception) {
+//            throw UnknownError
+//        }
+//    }
 
     override suspend fun getAll() {
         try {
@@ -103,6 +105,15 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             throw UnknownError
         }
     }
+
+    override suspend fun getById(id: Long): Post =
+        try {
+            dao.getById(id).toDto()
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
 
     override val data = dao.getAll().map { it.toDto() }
 }

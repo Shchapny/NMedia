@@ -79,11 +79,12 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                             }.show()
                         }
                         likes.setOnClickListener {
-                            if (!post.likedByMe) viewModel.like(post.id)
-                            else viewModel.unlikeById(post.id)
+//                            if (!post.likedByMe) viewModel.like(post.id)
+//                            else viewModel.unlikeById(post.id)
+                            viewModel.like(post.id)
                         }
                         share.setOnClickListener {
-                            viewModel.share(post.id)
+//                            viewModel.share(post.id)
                             val intent = Intent().apply {
                                 action = Intent.ACTION_SEND
                                 putExtra(Intent.EXTRA_TEXT, post.content)

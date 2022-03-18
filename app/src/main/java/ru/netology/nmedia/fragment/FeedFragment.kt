@@ -42,12 +42,13 @@ class FeedFragment : Fragment(R.layout.feed) {
                 }
 
                 override fun like(post: Post) {
-                    if (!post.likedByMe) viewModel.like(post.id)
-                    else viewModel.unlikeById(post.id)
+//                    if (!post.likedByMe) viewModel.like(post.id)
+//                    else viewModel.unlikeById(post.id)
+                    viewModel.like(post.id)
                 }
 
                 override fun share(post: Post) {
-                    viewModel.share(post.id)
+//                    viewModel.share(post.id)
 
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
