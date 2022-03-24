@@ -28,7 +28,6 @@ class FeedFragment : Fragment(R.layout.feed) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FeedBinding.bind(view)
 
-
         val adapter = PostAdapter(
             object : PostActionListener {
                 override fun edit(post: Post) {
@@ -43,12 +42,13 @@ class FeedFragment : Fragment(R.layout.feed) {
                 }
 
                 override fun like(post: Post) {
-                    if (!post.likedByMe) viewModel.like(post.id)
-                    else viewModel.unlikeById(post.id)
+//                    if (!post.likedByMe) viewModel.like(post.id)
+//                    else viewModel.unlikeById(post.id)
+                    viewModel.like(post.id)
                 }
 
                 override fun share(post: Post) {
-                    viewModel.share(post.id)
+//                    viewModel.share(post.id)
 
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
@@ -77,30 +77,32 @@ class FeedFragment : Fragment(R.layout.feed) {
         binding.container.adapter = adapter
         viewModel.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
-            binding.progress.isVisible = state.loading
-//            binding.errorGroup.isVisible = state.error
-            binding.emptyText.isVisible = state.empty
-            binding.swipeRefresh.isRefreshing = state.refreshing
-            if (state.error) {
-                Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_LONG)
-                    .setAction(R.string.retry_loading) { viewModel.retry() }
-                    .show()
+            binding.apply {
+                emptyText.isVisible = state.empty
             }
         }
 
-
-//        binding.retryButton.setOnClickListener {
-//            viewModel.loadPosts()
-//        }
+        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+            binding.apply {
+                swipeRefresh.isRefreshing = state.loading
+                progress.isVisible = state.loading
+                swipeRefresh.isRefreshing = state.refreshing
+                if (state.error) {
+                    Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
+                        .setAction(R.string.retry_loading) { viewModel.retry() }
+                        .show()
+                }
+            }
+        }
 
         with(binding) {
             fab.setOnClickListener {
                 findNavController().navigate(R.id.to_newPostOrEditPostFragment)
             }
-        }
 
-        binding.swipeRefresh.setOnRefreshListener {
-            viewModel.refresh()
+            swipeRefresh.setOnRefreshListener {
+                viewModel.refresh()
+            }
         }
     }
 }

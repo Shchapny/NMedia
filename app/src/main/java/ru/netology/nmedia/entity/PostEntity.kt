@@ -3,8 +3,6 @@ package ru.netology.nmedia.entity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import ru.netology.nmedia.dto.Post
-import java.text.SimpleDateFormat
-import java.util.*
 
 @Entity
 data class PostEntity(
@@ -51,5 +49,6 @@ data class PostEntity(
     }
 }
 
-private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
-    .format(Calendar.getInstance().time!!)!!
+fun List<PostEntity>.toDto() = map { it.toDto() }
+
+fun List<Post>.toEntity() = map { PostEntity.fromDto(it) }
