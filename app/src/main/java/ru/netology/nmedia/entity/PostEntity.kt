@@ -15,7 +15,8 @@ data class PostEntity(
     val views: Long,
     val likes: Long,
     val share: Long,
-    val video: String?
+    val video: String?,
+    val newPost: Boolean
 ) {
 
     companion object {
@@ -29,7 +30,8 @@ data class PostEntity(
                 views = views,
                 likes = likes,
                 share = share,
-                video = video
+                video = video,
+                newPost = newPost
             )
         }
     }
@@ -44,7 +46,8 @@ data class PostEntity(
             views = views,
             likes = likes,
             share = share,
-            video = video
+            video = video,
+            newPost = newPost
         )
     }
 }

@@ -7,8 +7,10 @@ import android.view.View
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostActionListener
 import ru.netology.nmedia.adapter.PostAdapter
@@ -95,6 +97,11 @@ class FeedFragment : Fragment(R.layout.feed) {
             }
         }
 
+        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+            if (state > 0) binding.buttonFreshPosts.visibility = View.VISIBLE
+            println(state)
+        }
+
         with(binding) {
             fab.setOnClickListener {
                 findNavController().navigate(R.id.to_newPostOrEditPostFragment)
@@ -102,6 +109,15 @@ class FeedFragment : Fragment(R.layout.feed) {
 
             swipeRefresh.setOnRefreshListener {
                 viewModel.refresh()
+            }
+
+            buttonFreshPosts.setOnClickListener {
+                lifecycleScope.launch {
+                    viewModel.getNewPosts()
+                    viewModel.loadPosts()
+                    container.smoothScrollToPosition(0)
+                }
+                it.visibility = View.GONE
             }
         }
     }
