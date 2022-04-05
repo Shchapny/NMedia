@@ -6,38 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".fragment.FeedFragment">
 
+    <Button
+        android:id="@+id/buttonFreshPosts"
+        style="@style/Widget.AppCompat.Button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|top"
+        android:drawableLeft="@drawable/ic_upward_24"
+        android:text="@string/fresh_posts"
+        android:visibility="gone"
+        tools:visibility="visible" />
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
-
-        <!--    <TextView-->
-        <!--        android:id="@+id/retryTitle"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:layout_marginBottom="@dimen/offset"-->
-        <!--        android:text="@string/error_loading"-->
-        <!--        app:layout_constraintBottom_toTopOf="@+id/retryButton"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintTop_toTopOf="parent"-->
-        <!--        app:layout_constraintVertical_chainStyle="packed" />-->
-
-        <!--    <Button-->
-        <!--        android:id="@+id/retryButton"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:text="@string/retry_loading"-->
-        <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintTop_toBottomOf="@id/retryTitle" />-->
-
-        <!--    <androidx.constraintlayout.widget.Group-->
-        <!--        android:id="@+id/errorGroup"-->
-        <!--        android:layout_width="wrap_content"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        app:constraint_referenced_ids="retryTitle, retryButton" />-->
 
         <TextView
             android:id="@+id/emptyText"
@@ -82,11 +64,11 @@
         android:id="@+id/fab"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         android:clickable="true"
         android:contentDescription="@string/add_post"
         android:focusable="true"
-        android:layout_gravity="bottom|end"
         app:srcCompat="@drawable/ic_add_48" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -22,4 +22,6 @@
     <string name="empty_posts">There are no posts.\nIf you create a new post, it will appear here</string>
     <string name="error_network">Error network</string>
     <string name="error_unknown">Error unknown</string>
+    <string name="db_error">Error Data base</string>
+    <string name="fresh_posts">fresh posts</string>
 </resources>

@@ -9,13 +9,15 @@ data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
     val author: String,
+    val authorAvatar: String,
     val content: String,
     val published: String,
     val likedByMe: Boolean,
     val views: Long,
     val likes: Long,
     val share: Long,
-    val video: String?
+    val video: String?,
+    val newPost: Boolean
 ) {
 
     companion object {
@@ -29,7 +31,9 @@ data class PostEntity(
                 views = views,
                 likes = likes,
                 share = share,
-                video = video
+                video = video,
+                newPost = newPost,
+                authorAvatar = authorAvatar
             )
         }
     }
@@ -44,7 +48,9 @@ data class PostEntity(
             views = views,
             likes = likes,
             share = share,
-            video = video
+            video = video,
+            newPost = newPost,
+            authorAvatar = authorAvatar
         )
     }
 }

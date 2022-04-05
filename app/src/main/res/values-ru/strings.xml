@@ -23,4 +23,6 @@
     <string name="empty_posts">Постов нет.\nЕсли создадите новый пост, то он появится здесь</string>
     <string name="error_network">Ошибка соединения</string>
     <string name="error_unknown">Неизвестная ошибка</string>
+    <string name="db_error">Ошибка базы данных</string>
+    <string name="fresh_posts">Свежие записи</string>
 </resources>

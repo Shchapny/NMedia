@@ -19,7 +19,8 @@ data class Post(
     val likes: Long = 0,
     val share: Long = 0,
     val video: String? = null,
-    var attachment: Attachment? = null
+    var attachment: Attachment? = null,
+    val newPost: Boolean = false
 )
 /* для отображения даты, но не идеальный вариант
 private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
