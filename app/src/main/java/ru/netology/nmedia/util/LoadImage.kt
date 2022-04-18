@@ -13,10 +13,8 @@ fun ImageView.loadImage(url: String, argument: String, post: Any?) {
             .circleCrop()
             .timeout(10_000)
             .into(this)
-        "images" -> Glide.with(this)
-            .load("$url/images/$post")
-            .placeholder(R.drawable.ic_loading_48)
-            .error(R.drawable.ic_error_48)
+        "media" -> Glide.with(this)
+            .load("$url/media/$post")
             .timeout(10_000)
             .into(this)
     }

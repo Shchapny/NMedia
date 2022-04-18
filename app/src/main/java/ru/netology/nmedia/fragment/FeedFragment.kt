@@ -3,7 +3,9 @@ package ru.netology.nmedia.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
@@ -14,21 +16,31 @@ import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostActionListener
 import ru.netology.nmedia.adapter.PostAdapter
-import ru.netology.nmedia.databinding.FeedBinding
+import ru.netology.nmedia.databinding.FragmentFeedBinding
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.fragment.NewPostOrEditPostFragment.Companion.textArg
+import ru.netology.nmedia.fragment.ShowImageFragment.Companion.showImage
 import ru.netology.nmedia.fragment.ShowPostFragment.Companion.showOnePost
 import ru.netology.nmedia.viewmodel.PostViewModel
 
-class FeedFragment : Fragment(R.layout.feed) {
+class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private val viewModel by viewModels<PostViewModel>(
         ownerProducer = ::requireParentFragment
     )
 
+    private var _binding: FragmentFeedBinding? = null
+    private val binding get() = _binding!!
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)?.also {
+            _binding = FragmentFeedBinding.bind(it)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FeedBinding.bind(view)
 
         val adapter = PostAdapter(
             object : PostActionListener {
@@ -44,14 +56,10 @@ class FeedFragment : Fragment(R.layout.feed) {
                 }
 
                 override fun like(post: Post) {
-//                    if (!post.likedByMe) viewModel.like(post.id)
-//                    else viewModel.unlikeById(post.id)
                     viewModel.like(post.id)
                 }
 
                 override fun share(post: Post) {
-//                    viewModel.share(post.id)
-
                     val intent = Intent().apply {
                         action = Intent.ACTION_SEND
                         putExtra(Intent.EXTRA_TEXT, post.content)
@@ -63,7 +71,7 @@ class FeedFragment : Fragment(R.layout.feed) {
                     startActivity(shareIntent)
                 }
 
-                override fun playVideo(post: Post) {
+                override fun video(post: Post) {
                     val intentVideo = Intent(Intent.ACTION_VIEW, Uri.parse(post.video))
                     startActivity(intentVideo)
                 }
@@ -72,6 +80,13 @@ class FeedFragment : Fragment(R.layout.feed) {
                     findNavController().navigate(
                         R.id.action_feedFragment_to_showPostFragment,
                         Bundle().apply { showOnePost = post.id })
+                }
+
+                override fun showImage(post: Post) {
+                    findNavController().navigate(
+                        R.id.action_feedFragment_to_showImageFragment,
+                        Bundle().apply { showImage = post.attachment?.url }
+                    )
                 }
             }
         )
@@ -120,5 +135,10 @@ class FeedFragment : Fragment(R.layout.feed) {
                 it.visibility = View.GONE
             }
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }

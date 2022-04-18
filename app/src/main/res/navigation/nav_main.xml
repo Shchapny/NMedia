@@ -8,18 +8,23 @@
     <fragment
         android:id="@+id/feedFragment"
         android:name="ru.netology.nmedia.fragment.FeedFragment"
-        tools:layout="@layout/feed" >
+        android:label="@string/app_name"
+        tools:layout="@layout/fragment_feed" >
         <action
             android:id="@+id/to_newPostOrEditPostFragment"
             app:destination="@id/newPostFragment" />
         <action
             android:id="@+id/action_feedFragment_to_showPostFragment"
             app:destination="@id/showPostFragment" />
+        <action
+            android:id="@+id/action_feedFragment_to_showImageFragment"
+            app:destination="@id/showImageFragment" />
     </fragment>
     <fragment
         android:id="@+id/newPostFragment"
         android:name="ru.netology.nmedia.fragment.NewPostOrEditPostFragment"
-        tools:layout="@layout/new_post_or_edit_post" >
+        android:label="@string/new_or_edit_post"
+        tools:layout="@layout/fragment_new_post_or_edit_post" >
         <action
             android:id="@+id/action_newPostFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
@@ -27,12 +32,21 @@
     <fragment
         android:id="@+id/showPostFragment"
         android:name="ru.netology.nmedia.fragment.ShowPostFragment"
-        android:label="ShowPostFragment" >
+        android:label="@string/show_post"
+        tools:layout="@layout/fragment_card_post">
         <action
             android:id="@+id/action_showPostFragment_to_feedFragment"
             app:destination="@id/feedFragment" />
         <action
             android:id="@+id/action_showPostFragment_to_newPostFragment"
             app:destination="@id/newPostFragment" />
+        <action
+            android:id="@+id/action_showPostFragment_to_showImageFragment"
+            app:destination="@id/showImageFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/showImageFragment"
+        android:name="ru.netology.nmedia.fragment.ShowImageFragment"
+        android:label="@string/show_image"
+        tools:layout="@layout/fragment_show_image" />
 </navigation>

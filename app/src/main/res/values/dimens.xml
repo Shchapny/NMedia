@@ -3,4 +3,6 @@
     <dimen name="offset">16dp</dimen>
     <dimen name="offset_post">5dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
+    <dimen name="offset_photo">8dp</dimen>
+    <dimen name="height_image_post">240dp</dimen>
 </resources>
