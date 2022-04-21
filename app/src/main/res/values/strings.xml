@@ -24,4 +24,12 @@
     <string name="error_unknown">Error unknown</string>
     <string name="db_error">Error Data base</string>
     <string name="fresh_posts">fresh posts</string>
+    <string name="menu_save">Save</string>
+    <string name="description_select_photo">Select photo</string>
+    <string name="description_take_photo">Take photo</string>
+    <string name="description_photo">Photo</string>
+    <string name="remove">Remove</string>
+    <string name="show_post">Post</string>
+    <string name="new_or_edit_post">New or edit post</string>
+    <string name="show_image">Image</string>
 </resources>

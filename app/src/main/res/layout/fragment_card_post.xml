@@ -78,7 +78,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/offset"
         app:barrierDirection="bottom"
-        app:constraint_referenced_ids="content, video, play" />
+        app:constraint_referenced_ids="content, imagePost, groupVideo" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/likes"
@@ -126,16 +126,27 @@
         tools:text="@sample/posts.json/data/views" />
 
     <ImageView
+        android:id="@+id/imagePost"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/height_image_post"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="@+id/content"
+        app:layout_constraintStart_toStartOf="@+id/content"
+        app:layout_constraintTop_toBottomOf="@+id/content"
+        tools:background="@drawable/spiderman"
+        tools:visibility="visible" />
+
+    <ImageView
         android:id="@+id/video"
         android:layout_width="match_parent"
-        android:layout_height="240dp"
+        android:layout_height="@dimen/height_image_post"
         android:layout_marginTop="5dp"
         android:autoLink="web"
-        android:background="@drawable/spiderman"
         android:clickable="true"
         app:layout_constraintEnd_toEndOf="@+id/content"
         app:layout_constraintStart_toStartOf="@+id/content"
         app:layout_constraintTop_toBottomOf="@+id/content"
+        tools:background="@drawable/spiderman"
         tools:ignore="SpeakableTextPresentCheck" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -157,6 +168,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        app:constraint_referenced_ids="play" />
+        android:visibility="gone"
+        app:constraint_referenced_ids="play, video"
+        tools:visibility="visible" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

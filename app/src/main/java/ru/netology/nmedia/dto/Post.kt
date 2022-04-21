@@ -4,7 +4,6 @@ import ru.netology.nmedia.enumeration.AttachmentType
 
 data class Attachment(
     val url: String,
-    val description: String?,
     val type: AttachmentType
 )
 
@@ -19,10 +18,6 @@ data class Post(
     val likes: Long = 0,
     val share: Long = 0,
     val video: String? = null,
-    var attachment: Attachment? = null,
-    val newPost: Boolean = false
+    val newPost: Boolean = false,
+    var attachment: Attachment? = null
 )
-/* для отображения даты, но не идеальный вариант
-private val formattedDate = SimpleDateFormat.getDateTimeInstance()!!
-    .format(Calendar.getInstance().time!!)!!
-*/

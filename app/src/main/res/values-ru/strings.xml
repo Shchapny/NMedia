@@ -25,4 +25,12 @@
     <string name="error_unknown">Неизвестная ошибка</string>
     <string name="db_error">Ошибка базы данных</string>
     <string name="fresh_posts">Свежие записи</string>
+    <string name="menu_save">Сохранить</string>
+    <string name="description_select_photo">Выбрать фотографию</string>
+    <string name="description_take_photo">Фотографировать</string>
+    <string name="description_photo">Фотография</string>
+    <string name="remove">Удалить</string>
+    <string name="show_post">Пост</string>
+    <string name="new_or_edit_post">Новый или редактирование поста</string>
+    <string name="show_image">Изображение</string>
 </resources>

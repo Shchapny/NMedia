@@ -3,37 +3,51 @@ package ru.netology.nmedia.fragment
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.PopupMenu
+import android.view.ViewGroup
+import androidx.appcompat.widget.PopupMenu
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
-import ru.netology.nmedia.databinding.CardPostFragmentBinding
+import ru.netology.nmedia.databinding.FragmentCardPostBinding
 import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.enumeration.AttachmentType
 import ru.netology.nmedia.fragment.NewPostOrEditPostFragment.Companion.textArg
+import ru.netology.nmedia.fragment.ShowImageFragment.Companion.showImage
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.PostArg
 import ru.netology.nmedia.util.loadImage
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 
-class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
+class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
 
     private val displayCount = DisplayCount()
-    private val url = "http://10.0.2.2:9999"
 
     companion object {
         var Bundle.showOnePost: Long by PostArg
     }
 
+    private var _binding: FragmentCardPostBinding? = null
+    private val binding get() = _binding!!
+
     private val viewModel by viewModels<PostViewModel>(
         ownerProducer = ::requireParentFragment
     )
 
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    ): View? {
+        return super.onCreateView(inflater, container, savedInstanceState)?.also {
+            _binding = FragmentCardPostBinding.bind(it)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = CardPostFragmentBinding.bind(view)
 
         arguments?.showOnePost?.let { id ->
             viewModel.data.observe(viewLifecycleOwner) { post ->
@@ -45,13 +59,12 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                         likes.text = displayCount.display(post.likes)
                         share.text = displayCount.display(post.share)
                         likes.isChecked = post.likedByMe
-                        avatar.loadImage(url, "avatars", post.authorAvatar)
-                        if (post.attachment != null) video.loadImage(
-                            url,
-                            "images",
-                            post.attachment?.url
-                        )
-                        else video.visibility = View.GONE
+                        avatar.loadImage(BuildConfig.BASE_URL, "avatars", post.authorAvatar)
+
+                        if (post.attachment != null && post.attachment?.type == AttachmentType.IMAGE) {
+                            imagePost.visibility = View.VISIBLE
+                            imagePost.loadImage(BuildConfig.BASE_URL, "media", post.attachment?.url)
+                        } else imagePost.visibility = View.GONE
 
                         menu.setOnClickListener {
                             PopupMenu(it.context, it).apply {
@@ -79,12 +92,9 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                             }.show()
                         }
                         likes.setOnClickListener {
-//                            if (!post.likedByMe) viewModel.like(post.id)
-//                            else viewModel.unlikeById(post.id)
                             viewModel.like(post.id)
                         }
                         share.setOnClickListener {
-//                            viewModel.share(post.id)
                             val intent = Intent().apply {
                                 action = Intent.ACTION_SEND
                                 putExtra(Intent.EXTRA_TEXT, post.content)
@@ -111,12 +121,27 @@ class ShowPostFragment : Fragment(R.layout.card_post_fragment) {
                                 )
                             startActivity(intentVideo)
                         }
+
+                        imagePost.setOnClickListener {
+                            findNavController().navigate(
+                                R.id.action_showPostFragment_to_showImageFragment,
+                                Bundle().apply {
+                                    showImage = post.attachment?.url
+                                }
+                            )
+                        }
+
                         if (post.video != null) groupVideo.visibility = View.VISIBLE
                         else groupVideo.visibility = View.GONE
                     }
                 }
             }
         }
+    }
+
+    override fun onDestroy() {
+        _binding = null
+        super.onDestroy()
     }
 }
 
