@@ -9,7 +9,8 @@ data class Attachment(
 
 data class Post(
     val id: Long = 0,
-    val author: String = "Нетология. Университет интернет-профессий будущего",
+    val authorId: Long = 0,
+    val author: String = "",
     val authorAvatar: String = "",
     val content: String = "",
     val published: String = "",
@@ -19,5 +20,6 @@ data class Post(
     val share: Long = 0,
     val video: String? = null,
     val newPost: Boolean = false,
-    var attachment: Attachment? = null
+    var attachment: Attachment? = null,
+    val ownedById: Boolean = false
 )

@@ -79,7 +79,7 @@
             android:layout_height="wrap_content"
             android:contentDescription="@string/description_select_photo"
             android:padding="@dimen/offset_photo"
-            android:src="@drawable/ic_photo_24" />
+            android:src="@drawable/ic_gallery_24" />
 
         <ImageView
             android:id="@+id/takePhoto"

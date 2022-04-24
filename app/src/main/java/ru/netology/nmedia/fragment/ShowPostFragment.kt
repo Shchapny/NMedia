@@ -20,6 +20,7 @@ import ru.netology.nmedia.fragment.ShowImageFragment.Companion.showImage
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.PostArg
 import ru.netology.nmedia.util.loadImage
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 
@@ -35,6 +36,10 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
     private val binding get() = _binding!!
 
     private val viewModel by viewModels<PostViewModel>(
+        ownerProducer = ::requireParentFragment
+    )
+
+    private val viewModelAuth by viewModels<AuthViewModel>(
         ownerProducer = ::requireParentFragment
     )
 
@@ -92,7 +97,8 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
                             }.show()
                         }
                         likes.setOnClickListener {
-                            viewModel.like(post.id)
+                            if (viewModelAuth.authenticated) viewModel.like(post.id)
+                            else findNavController().navigate(R.id.action_showPostFragment_to_authenticationFragment)
                         }
                         share.setOnClickListener {
                             val intent = Intent().apply {
@@ -139,9 +145,9 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }
 

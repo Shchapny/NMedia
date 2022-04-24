@@ -36,8 +36,8 @@ class ShowImageFragment : Fragment(R.layout.fragment_show_image) {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }

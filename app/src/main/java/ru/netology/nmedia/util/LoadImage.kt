@@ -1,21 +1,26 @@
 package ru.netology.nmedia.util
 
-import android.widget.ImageView
-import com.bumptech.glide.Glide
-import ru.netology.nmedia.R
+import android.content.Intent
+import androidx.fragment.app.Fragment
+import com.github.dhaval2404.imagepicker.ImagePicker
+import com.github.dhaval2404.imagepicker.constant.ImageProvider
 
-fun ImageView.loadImage(url: String, argument: String, post: Any?) {
-    when (argument) {
-        "avatars" -> Glide.with(this)
-            .load("$url/avatars/$post")
-            .placeholder(R.drawable.ic_loading_48)
-            .error(R.drawable.ic_error_48)
-            .circleCrop()
-            .timeout(10_000)
-            .into(this)
-        "media" -> Glide.with(this)
-            .load("$url/media/$post")
-            .timeout(10_000)
-            .into(this)
+object LoadImage {
+
+    fun loadFromGallery(fragment: Fragment, maxSize: Int,  intent: (Intent) -> Unit) {
+        ImagePicker.with(fragment)
+            .crop()
+            .compress(maxSize)
+            .provider(ImageProvider.GALLERY)
+            .galleryMimeTypes(arrayOf("image/png", "image/jpeg"))
+            .createIntent(intent)
+    }
+
+    fun loadFromCamera(fragment: Fragment, maxSize: Int, intent: (Intent) -> Unit) {
+        ImagePicker.with(fragment)
+            .crop()
+            .compress(maxSize)
+            .provider(ImageProvider.CAMERA)
+            .createIntent(intent)
     }
 }

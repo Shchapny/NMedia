@@ -4,9 +4,12 @@ import android.app.Application
 import android.net.Uri
 import androidx.lifecycle.*
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
@@ -20,6 +23,7 @@ import java.io.File
 
 private val empty = Post()
 
+@ExperimentalCoroutinesApi
 class PostViewModel(application: Application) :
     AndroidViewModel(application) {
 
@@ -28,11 +32,21 @@ class PostViewModel(application: Application) :
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel> = _photo
 
-        private val repository: PostRepository =
+    private val repository: PostRepository =
         PostRepositoryImpl(AppDb.getInstance(context = application).postDao())
-    val data = repository.data
-        .map { FeedModel(it, it.isEmpty()) }
-        .asLiveData(Dispatchers.Default)
+
+    val data = AppAuth.getInstance()
+        .authStateFlow
+        .flatMapLatest { (myId, _) ->
+            repository.data
+                .map { posts ->
+                    FeedModel(
+                        posts.map { it.copy(ownedById = it.authorId == myId) },
+                        posts.isEmpty()
+                    )
+                }
+        }.asLiveData(Dispatchers.Default)
+
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState> = _dataState
@@ -59,30 +73,27 @@ class PostViewModel(application: Application) :
         try {
             _dataState.value = FeedModelState(loading = true)
             repository.getAll()
+            _dataState.value = FeedModelState()
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
-        } finally {
-            _dataState.value = FeedModelState()
         }
     }
 
     fun like(id: Long) = viewModelScope.launch {
         try {
             repository.likeById(id)
+            _dataState.value = FeedModelState()
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
-        } finally {
-            _dataState.value = FeedModelState()
         }
     }
 
     fun remove(id: Long) = viewModelScope.launch {
         try {
             repository.removeById(id)
+            _dataState.value = FeedModelState()
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
-        } finally {
-            _dataState.value = FeedModelState()
         }
         refresh()
     }
@@ -106,10 +117,9 @@ class PostViewModel(application: Application) :
                             repository.saveWithAttachment(post, MediaUpload(file))
                         }
                     }
+                    _dataState.value = FeedModelState()
                 } catch (e: Exception) {
                     _dataState.value = FeedModelState(error = true)
-                } finally {
-                    _dataState.value = FeedModelState()
                 }
             }
         }
@@ -125,10 +135,9 @@ class PostViewModel(application: Application) :
         try {
             _dataState.value = FeedModelState(refreshing = true)
             repository.getAll()
+            _dataState.value = FeedModelState()
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
-        } finally {
-            _dataState.value = FeedModelState()
         }
     }
 
@@ -145,10 +154,9 @@ class PostViewModel(application: Application) :
         try {
             _dataState.value = FeedModelState(loading = true)
             repository.getAll()
+            _dataState.value = FeedModelState()
         } catch (e: java.lang.Exception) {
             _dataState.value = FeedModelState(error = true)
-        } finally {
-            _dataState.value = FeedModelState()
         }
     }
 

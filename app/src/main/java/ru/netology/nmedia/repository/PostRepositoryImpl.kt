@@ -3,9 +3,12 @@ package ru.netology.nmedia.repository
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import ru.netology.nmedia.api.PostApi
+import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.dao.PostDao
 import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Media
@@ -15,11 +18,10 @@ import ru.netology.nmedia.entity.PostEntity
 import ru.netology.nmedia.entity.toDto
 import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.enumeration.AttachmentType
-import ru.netology.nmedia.errors.ApiError
-import ru.netology.nmedia.errors.AppError
-import ru.netology.nmedia.errors.NetworkError
-import ru.netology.nmedia.errors.UnknownError
+import ru.netology.nmedia.errors.*
 import java.io.IOException
+import java.net.ConnectException
+import java.net.SocketTimeoutException
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
 
@@ -145,6 +147,75 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             save(postWithAttachment)
         } catch (e: ApiError) {
             throw e
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
+    override suspend fun authentication(login: String, password: String) {
+        try {
+            val response = PostApi.retrofitService.updateUser(login, password)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val authentication =
+                response.body() ?: throw ApiError(response.code(), response.message())
+            authentication.token?.let { AppAuth.getInstance().setAuth(authentication.id, it) }
+        } catch (e: ApiError) {
+            throw e
+        } catch (e: SocketTimeoutException) {
+            throw ServerError
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
+    override suspend fun registration(login: String, password: String, name: String) {
+        try {
+            val response = PostApi.retrofitService.registerUser(login, password, name)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+            val registration = response.body() ?: throw ApiError(response.code(), response.message())
+            registration.token?.let { AppAuth.getInstance().setAuth(registration.id, it) }
+        } catch (e: ApiError) {
+            throw e
+        } catch (e: SocketTimeoutException) {
+            throw ServerError
+        } catch (e: IOException) {
+            throw NetworkError
+        } catch (e: Exception) {
+            throw UnknownError
+        }
+    }
+
+    override suspend fun registerWithPhoto(
+        login: String,
+        password: String,
+        name: String,
+        mediaUpload: MediaUpload
+    ) {
+        try {
+            val loginRequest = login.toRequestBody("text/plain".toMediaType())
+            val passRequest = password.toRequestBody("text/plain".toMediaType())
+            val nameRequest = name.toRequestBody("text/plain".toMediaType())
+            val media = MultipartBody.Part.createFormData(
+                "file", mediaUpload.file.name, mediaUpload.file.asRequestBody()
+            )
+
+            val response = PostApi.retrofitService.registerWithPhoto(loginRequest, passRequest, nameRequest, media)
+            if (!response.isSuccessful) {
+                throw ApiError(response.code(), response.message())
+            }
+
+        } catch (e: ApiError) {
+            throw e
+        } catch (e: SocketTimeoutException) {
+            throw ServerError
         } catch (e: IOException) {
             throw NetworkError
         } catch (e: Exception) {

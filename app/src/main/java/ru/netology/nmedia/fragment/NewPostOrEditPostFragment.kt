@@ -15,6 +15,7 @@ import com.google.android.material.snackbar.Snackbar
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostOrEditPostBinding
 import ru.netology.nmedia.util.AndroidUtils
+import ru.netology.nmedia.util.LoadImage
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
@@ -49,6 +50,7 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
                     } else {
                         viewModel.editContent(it.edit.text.toString())
                         viewModel.save()
+                        viewModel.refresh()
                         AndroidUtils.hideKeyboard(requireView())
                     }
                 }
@@ -94,20 +96,11 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
             }
 
         binding.takePhoto.setOnClickListener {
-            ImagePicker.with(this)
-                .crop()
-                .compress(2048)
-                .provider(ImageProvider.CAMERA)
-                .createIntent(pickPhotoLauncher::launch)
+            LoadImage.loadFromCamera(this, 2048, pickPhotoLauncher::launch)
         }
 
         binding.pickPhoto.setOnClickListener {
-            ImagePicker.with(this)
-                .crop()
-                .compress(2048)
-                .provider(ImageProvider.GALLERY)
-                .galleryMimeTypes(arrayOf("image/png", "image/jpeg"))
-                .createIntent(pickPhotoLauncher::launch)
+            LoadImage.loadFromGallery(this, 2048, pickPhotoLauncher::launch)
         }
 
         binding.removePhoto.setOnClickListener {
@@ -116,6 +109,7 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
+            viewModel.refresh()
             findNavController().navigateUp()
         }
 
@@ -129,8 +123,8 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }

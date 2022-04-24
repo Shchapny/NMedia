@@ -33,4 +33,23 @@
     <string name="show_post">Пост</string>
     <string name="new_or_edit_post">Новый или редактирование поста</string>
     <string name="show_image">Изображение</string>
+    <string name="sign_in">Войти</string>
+    <string name="sign_up">Регистрация</string>
+    <string name="sign_out">Выйти</string>
+    <string name="login">Логин</string>
+    <string name="password">Пароль</string>
+    <string name="authentication">Аутентификация</string>
+    <string name="error_login">Введите логин</string>
+    <string name="error_password">Введите пароль</string>
+    <string name="refine_signout">Вы хотите выйти?</string>
+    <string name="cancel">Отмена</string>
+    <string name="name">Имя пользователя</string>
+    <string name="password_conf">Подтвердите пароль</string>
+    <string name="error_name">Введите имя пользователя</string>
+    <string name="error_conf_password">Введенные пароли не совпадают</string>
+    <string name="registration">Регистрация</string>
+    <string name="warning_login_or_pass">Неверный логин или пароль</string>
+    <string name="error_server">Ошибка сервера</string>
+    <string name="camera">Сделать снимок</string>
+    <string name="gallery">Загрузить с устройства</string>
 </resources>

@@ -10,5 +10,7 @@ data class FeedModel(
 data class FeedModelState(
     val loading: Boolean = false,
     val error: Boolean = false,
-    val refreshing: Boolean = false
+    val refreshing: Boolean = false,
+    val authState: Boolean = false,
+    val server: Boolean = false
 )

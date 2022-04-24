@@ -11,6 +11,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NMedia"
+        android:name=".application.NMediaApplication"
         android:usesCleartextTraffic="${usesCleartextTraffic}">
         <activity
             android:name=".activity.AppActivity"
