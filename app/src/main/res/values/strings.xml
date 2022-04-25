@@ -32,4 +32,23 @@
     <string name="show_post">Post</string>
     <string name="new_or_edit_post">New or edit post</string>
     <string name="show_image">Image</string>
+    <string name="sign_in">Sign In</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="sign_out">Sign Out</string>
+    <string name="login">Login</string>
+    <string name="password">Password</string>
+    <string name="authentication">Authentication</string>
+    <string name="error_login">Enter login</string>
+    <string name="error_password">Enter password</string>
+    <string name="refine_signout">Do you want to sign out?</string>
+    <string name="cancel">Cancel</string>
+    <string name="name">User name</string>
+    <string name="password_conf">Password confirmation</string>
+    <string name="error_name">Enter user name</string>
+    <string name="error_conf_password">The entered passwords do not match</string>
+    <string name="registration">Registration</string>
+    <string name="warning_login_or_pass">Invalid username or password</string>
+    <string name="error_server">Error server</string>
+    <string name="camera">Take a picture</string>
+    <string name="gallery">Download from device</string>
 </resources>

@@ -20,6 +20,7 @@ import ru.netology.nmedia.fragment.ShowImageFragment.Companion.showImage
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.PostArg
 import ru.netology.nmedia.util.loadImage
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 
@@ -34,7 +35,11 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
     private var _binding: FragmentCardPostBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel by viewModels<PostViewModel>(
+    private val viewModelPost by viewModels<PostViewModel>(
+        ownerProducer = ::requireParentFragment
+    )
+
+    private val viewModelAuth by viewModels<AuthViewModel>(
         ownerProducer = ::requireParentFragment
     )
 
@@ -50,7 +55,7 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
         super.onViewCreated(view, savedInstanceState)
 
         arguments?.showOnePost?.let { id ->
-            viewModel.data.observe(viewLifecycleOwner) { post ->
+            viewModelPost.data.observe(viewLifecycleOwner) { post ->
                 with(binding) {
                     post.posts.filter { id == it.id }.map { post: Post ->
                         author.text = post.author
@@ -74,7 +79,7 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
                                         R.id.remove -> {
                                             findNavController().navigate(
                                                 R.id.action_showPostFragment_to_feedFragment,
-                                                Bundle().apply { viewModel.remove(post.id) })
+                                                Bundle().apply { viewModelPost.remove(post.id) })
                                             true
                                         }
                                         R.id.edit -> {
@@ -82,7 +87,7 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
                                                 R.id.action_showPostFragment_to_newPostFragment,
                                                 Bundle().apply {
                                                     textArg = content.text.toString()
-                                                    viewModel.edit(post)
+                                                    viewModelPost.edit(post)
                                                 })
                                             true
                                         }
@@ -92,7 +97,8 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
                             }.show()
                         }
                         likes.setOnClickListener {
-                            viewModel.like(post.id)
+                            if (viewModelAuth.authenticated) viewModelPost.like(post.id)
+                            else findNavController().navigate(R.id.action_showPostFragment_to_authenticationFragment)
                         }
                         share.setOnClickListener {
                             val intent = Intent().apply {
@@ -139,9 +145,9 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }
 

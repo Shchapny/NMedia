@@ -25,6 +25,7 @@ data class AttachmentEmbeddable(
 data class PostEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long,
+    val authorId: Long,
     val author: String,
     val authorAvatar: String,
     val content: String,
@@ -43,6 +44,7 @@ data class PostEntity(
         fun fromDto(dto: Post): PostEntity = with(dto) {
             PostEntity(
                 id = id,
+                authorId = authorId,
                 author = author,
                 content = content,
                 published = published,
@@ -61,6 +63,7 @@ data class PostEntity(
     fun toDto(): Post = with(this) {
         Post(
             id = id,
+            authorId = authorId,
             author = author,
             content = content,
             published = published,

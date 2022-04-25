@@ -16,6 +16,9 @@ interface PostRepository {
     suspend fun getNewPosts()
     suspend fun uploadMedia(upload: MediaUpload): Media
     suspend fun saveWithAttachment(post: Post, upload: MediaUpload)
+    suspend fun authentication(login: String, password: String)
+    suspend fun registration(login: String, password: String, name: String)
+    suspend fun registerWithPhoto(login: String, password: String, name: String, mediaUpload: MediaUpload)
 
     val data: Flow<List<Post>>
 }

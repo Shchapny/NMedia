@@ -21,11 +21,16 @@ import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.fragment.NewPostOrEditPostFragment.Companion.textArg
 import ru.netology.nmedia.fragment.ShowImageFragment.Companion.showImage
 import ru.netology.nmedia.fragment.ShowPostFragment.Companion.showOnePost
+import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
 class FeedFragment : Fragment(R.layout.fragment_feed) {
 
-    private val viewModel by viewModels<PostViewModel>(
+    private val viewModelPost by viewModels<PostViewModel>(
+        ownerProducer = ::requireParentFragment
+    )
+
+    private val viewModelAuth by viewModels<AuthViewModel>(
         ownerProducer = ::requireParentFragment
     )
 
@@ -45,18 +50,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         val adapter = PostAdapter(
             object : PostActionListener {
                 override fun edit(post: Post) {
-                    viewModel.edit(post)
+                    viewModelPost.edit(post)
                     findNavController().navigate(
                         R.id.to_newPostOrEditPostFragment,
                         Bundle().apply { textArg = post.content })
                 }
 
                 override fun remove(post: Post) {
-                    viewModel.remove(post.id)
+                    viewModelPost.remove(post.id)
                 }
 
                 override fun like(post: Post) {
-                    viewModel.like(post.id)
+                    if (viewModelAuth.authenticated) viewModelPost.like(post.id)
+                    else findNavController().navigate(R.id.action_feedFragment_to_authenticationFragment)
                 }
 
                 override fun share(post: Post) {
@@ -92,44 +98,45 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         )
 
         binding.container.adapter = adapter
-        viewModel.data.observe(viewLifecycleOwner) { state ->
+        viewModelPost.data.observe(viewLifecycleOwner) { state ->
             adapter.submitList(state.posts)
             binding.apply {
                 emptyText.isVisible = state.empty
             }
         }
 
-        viewModel.dataState.observe(viewLifecycleOwner) { state ->
+        viewModelPost.dataState.observe(viewLifecycleOwner) { state ->
             binding.apply {
                 swipeRefresh.isRefreshing = state.loading
                 progress.isVisible = state.loading
                 swipeRefresh.isRefreshing = state.refreshing
                 if (state.error) {
                     Snackbar.make(binding.root, R.string.error_loading, Snackbar.LENGTH_INDEFINITE)
-                        .setAction(R.string.retry_loading) { viewModel.retry() }
+                        .setAction(R.string.retry_loading) { viewModelPost.retry() }
                         .show()
                 }
             }
         }
 
-        viewModel.newerCount.observe(viewLifecycleOwner) { state ->
+        viewModelPost.newerCount.observe(viewLifecycleOwner) { state ->
             if (state > 0) binding.buttonFreshPosts.visibility = View.VISIBLE
             println(state)
         }
 
         with(binding) {
             fab.setOnClickListener {
-                findNavController().navigate(R.id.to_newPostOrEditPostFragment)
+                if (viewModelAuth.authenticated) findNavController().navigate(R.id.to_newPostOrEditPostFragment)
+                else findNavController().navigate(R.id.action_feedFragment_to_authenticationFragment)
             }
 
             swipeRefresh.setOnRefreshListener {
-                viewModel.refresh()
+                viewModelPost.refresh()
             }
 
             buttonFreshPosts.setOnClickListener {
                 lifecycleScope.launch {
-                    viewModel.getNewPosts()
-                    viewModel.loadPosts()
+                    viewModelPost.getNewPosts()
+                    viewModelPost.loadPosts()
                     container.smoothScrollToPosition(0)
                 }
                 it.visibility = View.GONE
@@ -137,8 +144,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         }
     }
 
-    override fun onDestroy() {
+    override fun onDestroyView() {
         _binding = null
-        super.onDestroy()
+        super.onDestroyView()
     }
 }
