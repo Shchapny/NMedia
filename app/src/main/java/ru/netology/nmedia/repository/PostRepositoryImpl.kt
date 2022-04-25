@@ -20,7 +20,6 @@ import ru.netology.nmedia.entity.toEntity
 import ru.netology.nmedia.enumeration.AttachmentType
 import ru.netology.nmedia.errors.*
 import java.io.IOException
-import java.net.ConnectException
 import java.net.SocketTimeoutException
 
 class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
@@ -67,6 +66,8 @@ class PostRepositoryImpl(private val dao: PostDao) : PostRepository {
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
+            val body = response.body() ?: throw ApiError(response.code(), response.message())
+            dao.insert(PostEntity.fromDto(body))
             return postId
         } catch (e: ApiError) {
             throw e

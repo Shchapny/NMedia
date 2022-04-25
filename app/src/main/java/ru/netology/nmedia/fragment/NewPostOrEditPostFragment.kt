@@ -50,7 +50,6 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
                     } else {
                         viewModel.editContent(it.edit.text.toString())
                         viewModel.save()
-                        viewModel.refresh()
                         AndroidUtils.hideKeyboard(requireView())
                     }
                 }
@@ -109,7 +108,6 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
             viewModel.loadPosts()
-            viewModel.refresh()
             findNavController().navigateUp()
         }
 

@@ -39,6 +39,7 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
         binding.apply {
             btSignin.setOnClickListener {
                 viewModel.reset()
+                resetErrorInfo()
                 val login = login.text?.trim().toString()
                 val password = password.text?.trim().toString()
                 when {
@@ -62,6 +63,11 @@ class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
                 }
             }
         }
+    }
+
+    private fun resetErrorInfo() {
+        binding.loginLayout.error = null
+        binding.passwordLayout.error = null
     }
 
     private fun onShowSnackbar(res: Int) {

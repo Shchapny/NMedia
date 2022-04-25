@@ -87,6 +87,7 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
 
         binding.apply {
             btSignup.setOnClickListener {
+                resetErrorInfo()
                 val login = login.text?.trim().toString()
                 val password = password.text?.trim().toString()
                 val name = userName.text?.trim().toString()
@@ -116,6 +117,13 @@ class RegistrationFragment : Fragment(R.layout.fragment_registration) {
             }
             binding.avatar.setImageURI(photo.uri)
         }
+    }
+
+    private fun resetErrorInfo() {
+        binding.loginLayout.error = null
+        binding.userNameLayout.error = null
+        binding.passwordConfLayout.error = null
+        binding.passwordLayout.error = null
     }
 
     private fun onShowSnackbar(res: Int) {
