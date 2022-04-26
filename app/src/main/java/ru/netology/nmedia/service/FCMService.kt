@@ -11,6 +11,7 @@ import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import com.google.gson.Gson
 import ru.netology.nmedia.R
+import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.service.FCMService.Action.*
 import kotlin.random.Random
 
@@ -20,6 +21,7 @@ class FCMService : FirebaseMessagingService() {
         private const val DATA_ACTION_KEY = "action"
         private const val DATA_CONTENT_KEY = "content"
         private const val CHANNEL_ID = "remote"
+        private const val RECIPIENT_ID = "recipientId"
         private val gson by lazy { Gson() }
     }
 
@@ -60,10 +62,25 @@ class FCMService : FirebaseMessagingService() {
                 )
             }
         }
+
+        val recipientId = message.data[RECIPIENT_ID]?.toLong()
+        val id = AppAuth.getInstance().authStateFlow.value.id
+
+        when (recipientId) {
+            0L -> AppAuth.getInstance().sendPushToken()
+            id, null -> handPushMessage(
+                gson.fromJson(
+                    message.data[DATA_CONTENT_KEY],
+                    PushMessage::class.java
+                )
+            )
+            else -> AppAuth.getInstance().sendPushToken()
+        }
     }
 
     override fun onNewToken(token: String) {
         Log.d("FCM token", "token: $token")
+        AppAuth.getInstance().sendPushToken(token)
     }
 
     enum class Action {
@@ -127,6 +144,23 @@ class FCMService : FirebaseMessagingService() {
             .notify(Random.nextInt(100_000), notification)
     }
 
+    private fun handPushMessage(content: PushMessage) {
+        val notification = NotificationCompat.Builder(this, CHANNEL_ID)
+            .setSmallIcon(R.drawable.ic_notification)
+            .setContentTitle(
+                getString(
+                    R.string.notification,
+                    content.recipientId.toString(),
+                    content.content
+                )
+            )
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+            .build()
+
+        NotificationManagerCompat.from(this)
+            .notify(Random.nextInt(100_000), notification)
+    }
+
     data class Like(
         val userId: Long,
         val userName: String,
@@ -140,6 +174,11 @@ class FCMService : FirebaseMessagingService() {
     )
 
     data class Other(
+        val content: String
+    )
+
+    data class PushMessage(
+        val recipientId: Long?,
         val content: String
     )
 }

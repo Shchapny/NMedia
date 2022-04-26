@@ -52,4 +52,5 @@
     <string name="error_server">Ошибка сервера</string>
     <string name="camera">Сделать снимок</string>
     <string name="gallery">Загрузить с устройства</string>
+    <string name="notification">%1$s %2$s</string>
 </resources>
