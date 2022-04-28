@@ -1,24 +1,23 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
 import android.net.Uri
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.ServerError
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
-import ru.netology.nmedia.repository.PostRepositoryImpl
+import ru.netology.nmedia.repository.PostRepository
 import java.io.File
+import javax.inject.Inject
 
-class RegistrationViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = PostRepositoryImpl(AppDb.getInstance(application).postDao())
+@HiltViewModel
+class RegistrationViewModel @Inject constructor(private val repository: PostRepository) : ViewModel() {
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState> = _dataState

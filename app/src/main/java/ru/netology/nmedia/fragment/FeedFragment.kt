@@ -12,6 +12,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostActionListener
@@ -24,6 +25,7 @@ import ru.netology.nmedia.fragment.ShowPostFragment.Companion.showOnePost
 import ru.netology.nmedia.viewmodel.AuthViewModel
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+@AndroidEntryPoint
 class FeedFragment : Fragment(R.layout.fragment_feed) {
 
     private val viewModelPost by viewModels<PostViewModel>(

@@ -12,14 +12,28 @@ import androidx.navigation.ui.NavigationUI
 import com.google.android.gms.common.ConnectionResult
 import com.google.android.gms.common.GoogleApiAvailability
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.firebase.messaging.FirebaseMessaging
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.fragment.NewPostOrEditPostFragment.Companion.textArg
+import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.viewmodel.AuthViewModel
+import javax.inject.Inject
 
+@AndroidEntryPoint
 class AppActivity : AppCompatActivity(R.layout.activity_app) {
 
     private val viewModel by viewModels<AuthViewModel>()
+
+    @Inject
+    lateinit var appAuth: AppAuth
+
+    @Inject
+    lateinit var firebaseMessaging: FirebaseMessaging
+
+    @Inject
+    lateinit var googleApiAvailability: GoogleApiAvailability
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,6 +65,16 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
             invalidateOptionsMenu()
         }
 
+        firebaseMessaging.token.addOnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                println("some stuff happened: ${task.exception}")
+                return@addOnCompleteListener
+            }
+
+            val token = task.result
+            println(token)
+        }
+
         checkGoogleApiAvailability()
     }
 
@@ -65,7 +89,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return when(item.itemId) {
+        return when (item.itemId) {
             R.id.signin -> {
                 findNavController(R.id.nav_host_fragment).navigate(R.id.action_feedFragment_to_authenticationFragment)
                 true
@@ -78,7 +102,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
                 MaterialAlertDialogBuilder(this)
                     .setMessage(R.string.refine_signout)
                     .setPositiveButton(R.string.sign_out) { _, _ ->
-                        AppAuth.getInstance().removeAuth()
+                        appAuth.removeAuth()
                         findNavController(R.id.nav_host_fragment).navigateUp()
                     }
                     .setNegativeButton(R.string.cancel) { _, _ ->
@@ -96,7 +120,7 @@ class AppActivity : AppCompatActivity(R.layout.activity_app) {
     }
 
     private fun checkGoogleApiAvailability() {
-        with(GoogleApiAvailability.getInstance()) {
+        with(googleApiAvailability) {
             val code = isGooglePlayServicesAvailable(this@AppActivity)
             if (code == ConnectionResult.SUCCESS) {
                 return@with

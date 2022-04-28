@@ -5,12 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentShowImageBinding
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.util.loadImage
 
+@AndroidEntryPoint
 class ShowImageFragment : Fragment(R.layout.fragment_show_image) {
 
     private var _binding: FragmentShowImageBinding? = null

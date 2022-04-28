@@ -1,30 +1,26 @@
 package ru.netology.nmedia.viewmodel
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.db.AppDb
 import ru.netology.nmedia.errors.ApiError
 import ru.netology.nmedia.errors.NetworkError
 import ru.netology.nmedia.errors.ServerError
 import ru.netology.nmedia.model.FeedModelState
-import ru.netology.nmedia.repository.PostRepositoryImpl
-import java.io.IOException
+import ru.netology.nmedia.repository.PostRepository
+import javax.inject.Inject
 
-class AuthenticationViewModel(application: Application) : AndroidViewModel(application) {
-
-    private val repository = PostRepositoryImpl(AppDb.getInstance(application).postDao())
+@HiltViewModel
+class AuthenticationViewModel @Inject constructor(private val repository: PostRepository) :
+    ViewModel() {
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState> = _dataState
 
     fun authentication(login: String, password: String) = viewModelScope.launch {
-//        _dataState.value = FeedModelState(error = false)
-//        _dataState.value = FeedModelState(loading = false)
-//        _dataState.value = FeedModelState(server = false)
         try {
             repository.authentication(login, password)
             _dataState.value = FeedModelState(authState = true)

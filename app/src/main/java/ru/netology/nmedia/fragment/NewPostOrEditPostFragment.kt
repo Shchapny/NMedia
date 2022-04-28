@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.github.dhaval2404.imagepicker.ImagePicker
 import com.github.dhaval2404.imagepicker.constant.ImageProvider
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentNewPostOrEditPostBinding
 import ru.netology.nmedia.util.AndroidUtils
@@ -19,6 +20,7 @@ import ru.netology.nmedia.util.LoadImage
 import ru.netology.nmedia.util.StringArg
 import ru.netology.nmedia.viewmodel.PostViewModel
 
+@AndroidEntryPoint
 class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_post) {
 
     companion object {

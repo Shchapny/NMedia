@@ -3,6 +3,7 @@ plugins {
     id 'kotlin-android'
     id 'kotlin-kapt'
     id 'com.google.gms.google-services'
+    id 'dagger.hilt.android.plugin'
 }
 
 android {
@@ -89,6 +90,9 @@ dependencies {
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_version"
     implementation "com.github.dhaval2404:imagepicker:$imagepicker_version"
     implementation "org.jetbrains.kotlinx:kotlinx-coroutines-play-services:$coroutines_version"
+    implementation "com.google.dagger:hilt-android:$hilt_version"
+    kapt "com.google.dagger:hilt-compiler:$hilt_version"
+
 
     testImplementation "junit:junit:$junit_version"
     androidTestImplementation "androidx.test.ext:junit:$ext_junit_version"
