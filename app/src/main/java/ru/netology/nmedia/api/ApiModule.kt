@@ -11,8 +11,8 @@ import javax.inject.Singleton
 @Module
 object ApiModule {
 
-    @Provides
     @Singleton
+    @Provides
     fun provideApiService(appAuth: AppAuth): ApiService {
         return retrofit(okhttp(loggingInterceptor(), authInterceptor(appAuth)))
             .create(ApiService::class.java)

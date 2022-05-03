@@ -13,11 +13,10 @@ import javax.inject.Singleton
 @Module
 object DbModule {
 
-    @Provides
     @Singleton
+    @Provides
     fun provideAppDb(@ApplicationContext context: Context): AppDb =
         Room.databaseBuilder(context, AppDb::class.java, "app.db")
             .fallbackToDestructiveMigration()
             .build()
-
 }

@@ -30,7 +30,6 @@ class PostViewModel @Inject constructor(
 ) :
     ViewModel() {
 
-
     private val noPhoto = PhotoModel()
 
     private val _photo = MutableLiveData(noPhoto)

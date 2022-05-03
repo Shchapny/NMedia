@@ -27,12 +27,10 @@ import javax.inject.Singleton
 @Singleton
 class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
-    private val apiService: ApiService
+    private val apiService: ApiService,
+    private val appAuth: AppAuth
 ) :
     PostRepository {
-
-    @Inject
-    lateinit var appAuth: AppAuth
 
     override suspend fun likeById(id: Long) {
         try {
@@ -224,7 +222,6 @@ class PostRepositoryImpl @Inject constructor(
             if (!response.isSuccessful) {
                 throw ApiError(response.code(), response.message())
             }
-
         } catch (e: ApiError) {
             throw e
         } catch (e: SocketTimeoutException) {

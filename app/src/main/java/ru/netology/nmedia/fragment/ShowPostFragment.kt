@@ -27,8 +27,6 @@ import ru.netology.nmedia.viewmodel.PostViewModel
 @AndroidEntryPoint
 class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
 
-    private val displayCount = DisplayCount()
-
     companion object {
         var Bundle.showOnePost: Long by PostArg
     }
@@ -62,8 +60,8 @@ class ShowPostFragment : Fragment(R.layout.fragment_card_post) {
                         author.text = post.author
                         published.text = post.published
                         content.text = post.content
-                        likes.text = displayCount.display(post.likes)
-                        share.text = displayCount.display(post.share)
+                        likes.text = DisplayCount.display(post.likes)
+                        share.text = DisplayCount.display(post.share)
                         likes.isChecked = post.likedByMe
                         avatar.loadImage(BuildConfig.BASE_URL, "avatars", post.authorAvatar)
 

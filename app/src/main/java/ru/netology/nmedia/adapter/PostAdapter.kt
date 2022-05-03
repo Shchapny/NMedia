@@ -16,8 +16,6 @@ import ru.netology.nmedia.enumeration.AttachmentType
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.loadImage
 
-val displayCount = DisplayCount()
-
 interface PostActionListener {
     fun edit(post: Post)
     fun remove(post: Post)
@@ -53,8 +51,8 @@ class PostViewHolder(
             author.text = post.author
             content.text = post.content
             published.text = post.published
-            likes.text = displayCount.display(post.likes)
-            share.text = displayCount.display(post.share)
+            likes.text = DisplayCount.display(post.likes)
+            share.text = DisplayCount.display(post.share)
             likes.isChecked = (post.likedByMe)
 
             likes.setOnClickListener {

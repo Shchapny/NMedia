@@ -21,5 +21,4 @@ class Converters {
 abstract class AppDb : RoomDatabase() {
 
     abstract fun postDao(): PostDao
-
 }
