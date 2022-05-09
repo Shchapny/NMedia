@@ -1,5 +1,6 @@
 package ru.netology.nmedia.repository
 
+import androidx.paging.PagingData
 import kotlinx.coroutines.flow.Flow
 import ru.netology.nmedia.dto.Media
 import ru.netology.nmedia.dto.MediaUpload
@@ -20,5 +21,5 @@ interface PostRepository {
     suspend fun registration(login: String, password: String, name: String)
     suspend fun registerWithPhoto(login: String, password: String, name: String, mediaUpload: MediaUpload)
 
-    val data: Flow<List<Post>>
+    val data: Flow<PagingData<Post>>
 }

@@ -2,17 +2,15 @@ package ru.netology.nmedia.viewmodel
 
 import android.net.Uri
 import androidx.lifecycle.*
+import androidx.paging.cachedIn
+import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.catch
-import kotlinx.coroutines.flow.flatMapLatest
-import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
-import ru.netology.nmedia.model.FeedModel
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
@@ -35,18 +33,14 @@ class PostViewModel @Inject constructor(
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel> = _photo
 
-    val data = appAuth
-        .authStateFlow
-        .flatMapLatest { (myId, _) ->
-            repository.data
-                .map { posts ->
-                    FeedModel(
-                        posts.map { it.copy(ownedById = it.authorId == myId) },
-                        posts.isEmpty()
-                    )
-                }
-        }.asLiveData(Dispatchers.Default)
+    private val cached = repository.data.cachedIn(viewModelScope)
 
+    val data = appAuth.authStateFlow
+        .flatMapLatest { (myId, _) ->
+            cached.map { posts ->
+                posts.map { it.copy(ownedById = it.authorId == myId) }
+            }
+        }
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState> = _dataState
@@ -59,25 +53,11 @@ class PostViewModel @Inject constructor(
     private var nameError: PlaceOfError? = null
     private var postId: Long? = null
 
-    val newerCount = data.switchMap {
-        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
-            .catch { e -> e.printStackTrace() }
-            .asLiveData(Dispatchers.Default)
-    }
-
-    init {
-        loadPosts()
-    }
-
-    fun loadPosts() = viewModelScope.launch {
-        try {
-            _dataState.value = FeedModelState(loading = true)
-            repository.getAll()
-            _dataState.value = FeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = FeedModelState(error = true)
-        }
-    }
+//    val newerCount = data.switchMap {
+//        repository.getNewerCount(it.posts.firstOrNull()?.id ?: 0L)
+//            .catch { e -> e.printStackTrace() }
+//            .asLiveData(Dispatchers.Default)
+//    }
 
     fun like(id: Long) = viewModelScope.launch {
         try {
@@ -95,7 +75,6 @@ class PostViewModel @Inject constructor(
         } catch (e: Exception) {
             _dataState.value = FeedModelState(error = true)
         }
-        refresh()
     }
 
     fun editContent(text: String) {
@@ -131,22 +110,11 @@ class PostViewModel @Inject constructor(
         edited.value = post
     }
 
-    fun refresh() = viewModelScope.launch {
-        try {
-            _dataState.value = FeedModelState(refreshing = true)
-            repository.getAll()
-            _dataState.value = FeedModelState()
-        } catch (e: Exception) {
-            _dataState.value = FeedModelState(error = true)
-        }
-    }
-
     fun retry() {
         when (nameError) {
             PlaceOfError.LIKE -> postId?.let { like(it) }
             PlaceOfError.REMOVE -> postId?.let { remove(it) }
             PlaceOfError.SAVE -> save()
-            else -> loadPosts()
         }
     }
 
