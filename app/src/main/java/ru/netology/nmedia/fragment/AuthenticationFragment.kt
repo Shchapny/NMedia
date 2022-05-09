@@ -9,12 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
+import dagger.hilt.android.AndroidEntryPoint
 import ru.netology.nmedia.R
 import ru.netology.nmedia.databinding.FragmentAuthenticationBinding
 import ru.netology.nmedia.util.AndroidUtils
 import ru.netology.nmedia.viewmodel.AuthenticationViewModel
 
-
+@AndroidEntryPoint
 class AuthenticationFragment : Fragment(R.layout.fragment_authentication) {
 
     private val viewModel by viewModels<AuthenticationViewModel>(

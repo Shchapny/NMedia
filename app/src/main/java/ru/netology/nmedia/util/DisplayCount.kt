@@ -3,7 +3,7 @@ package ru.netology.nmedia.util
 import kotlin.math.ln
 import kotlin.math.pow
 
-class DisplayCount {
+object DisplayCount {
 
     fun display(value: Long): String {
         if (value < 1000) return "" + value

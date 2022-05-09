@@ -7,7 +7,6 @@ import ru.netology.nmedia.dto.Attachment
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.enumeration.AttachmentType
 
-
 data class AttachmentEmbeddable(
     var url: String,
     var type: AttachmentType
