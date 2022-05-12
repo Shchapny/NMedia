@@ -1,14 +1,13 @@
 package ru.netology.nmedia.viewmodel
 
 import android.net.Uri
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
-import androidx.paging.map
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.authorization.AppAuth
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
@@ -20,11 +19,9 @@ import javax.inject.Inject
 
 private val empty = Post()
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository,
-    appAuth: AppAuth
+    private val repository: PostRepository
 ) :
     ViewModel() {
 
@@ -35,12 +32,7 @@ class PostViewModel @Inject constructor(
 
     private val cached = repository.data.cachedIn(viewModelScope)
 
-    val data = appAuth.authStateFlow
-        .flatMapLatest { (myId, _) ->
-            cached.map { posts ->
-                posts.map { it.copy(ownedById = it.authorId == myId) }
-            }
-        }
+    val data = cached
 
     private val _dataState = MutableLiveData(FeedModelState())
     val dataState: LiveData<FeedModelState> = _dataState
