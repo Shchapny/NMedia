@@ -109,7 +109,7 @@ class NewPostOrEditPostFragment : Fragment(R.layout.fragment_new_post_or_edit_po
         }
 
         viewModel.postCreated.observe(viewLifecycleOwner) {
-            viewModel.loadPosts()
+//            viewModel.loadPosts()
             findNavController().navigateUp()
         }
 

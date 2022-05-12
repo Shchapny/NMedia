@@ -1,5 +1,6 @@
 package ru.netology.nmedia.dto
 
+import com.google.gson.annotations.SerializedName
 import ru.netology.nmedia.enumeration.AttachmentType
 
 data class Attachment(
@@ -21,5 +22,6 @@ data class Post(
     val video: String? = null,
     val newPost: Boolean = false,
     var attachment: Attachment? = null,
+    @SerializedName("ownerByMe")
     val ownedById: Boolean = false
 )

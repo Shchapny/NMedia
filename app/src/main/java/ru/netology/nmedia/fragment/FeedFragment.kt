@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.adapter.PostActionListener
@@ -39,7 +41,8 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
     private var _binding: FragmentFeedBinding? = null
     private val binding get() = _binding!!
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
+    override fun onCreateView(
+        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
         return super.onCreateView(inflater, container, savedInstanceState)?.also {
             _binding = FragmentFeedBinding.bind(it)
@@ -100,10 +103,17 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
         )
 
         binding.container.adapter = adapter
-        viewModelPost.data.observe(viewLifecycleOwner) { state ->
-            adapter.submitList(state.posts)
-            binding.apply {
-                emptyText.isVisible = state.empty
+
+        lifecycleScope.launchWhenCreated {
+            viewModelPost.data.collectLatest(adapter::submitData)
+        }
+
+        lifecycleScope.launchWhenCreated {
+            adapter.loadStateFlow.collectLatest { state ->
+                binding.swipeRefresh.isRefreshing =
+                    state.refresh is LoadState.Loading ||
+                            state.append is LoadState.Loading ||
+                            state.prepend is LoadState.Loading
             }
         }
 
@@ -120,10 +130,10 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
             }
         }
 
-        viewModelPost.newerCount.observe(viewLifecycleOwner) { state ->
-            if (state > 0) binding.buttonFreshPosts.visibility = View.VISIBLE
-            println(state)
-        }
+//        viewModelPost.newerCount.observe(viewLifecycleOwner) { state ->
+//            if (state > 0) binding.buttonFreshPosts.visibility = View.VISIBLE
+//            println(state)
+//        }
 
         with(binding) {
             fab.setOnClickListener {
@@ -131,19 +141,19 @@ class FeedFragment : Fragment(R.layout.fragment_feed) {
                 else findNavController().navigate(R.id.action_feedFragment_to_authenticationFragment)
             }
 
-            swipeRefresh.setOnRefreshListener {
-                viewModelPost.refresh()
-            }
+            swipeRefresh.setOnRefreshListener { adapter.refresh() }
 
             buttonFreshPosts.setOnClickListener {
                 lifecycleScope.launch {
                     viewModelPost.getNewPosts()
-                    viewModelPost.loadPosts()
+                    adapter.refresh()
                     container.smoothScrollToPosition(0)
                 }
                 it.visibility = View.GONE
             }
         }
+
+        viewModelAuth.dataAuth.observe(viewLifecycleOwner) { adapter.refresh() }
     }
 
     override fun onDestroyView() {
