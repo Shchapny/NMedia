@@ -39,7 +39,7 @@
         android:id="@+id/showPostFragment"
         android:name="ru.netology.nmedia.fragment.ShowPostFragment"
         android:label="@string/show_post"
-        tools:layout="@layout/fragment_card_post">
+        tools:layout="@layout/card_post">
         <action
             android:id="@+id/action_showPostFragment_to_feedFragment"
             app:destination="@id/feedFragment" />

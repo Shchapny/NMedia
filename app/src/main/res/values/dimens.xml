@@ -7,4 +7,5 @@
     <dimen name="height_image_post">240dp</dimen>
     <dimen name="avatar_radius">50dp</dimen>
     <dimen name="avatar_size">100dp</dimen>
+    <dimen name="height_ad">280dp</dimen>
 </resources>
