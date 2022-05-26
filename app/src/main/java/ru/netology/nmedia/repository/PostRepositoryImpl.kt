@@ -25,7 +25,6 @@ import ru.netology.nmedia.errors.*
 import java.io.IOException
 import java.net.SocketTimeoutException
 import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
 
 @Singleton

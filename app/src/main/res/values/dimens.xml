@@ -8,4 +8,6 @@
     <dimen name="avatar_radius">50dp</dimen>
     <dimen name="avatar_size">100dp</dimen>
     <dimen name="height_ad">280dp</dimen>
+    <dimen name="offset_date_published">2dp</dimen>
+    <dimen name="radius_date_published">10dp</dimen>
 </resources>

@@ -11,11 +11,14 @@ import ru.netology.nmedia.BuildConfig
 import ru.netology.nmedia.R
 import ru.netology.nmedia.R.id
 import ru.netology.nmedia.databinding.CardAdBinding
+import ru.netology.nmedia.databinding.CardDatePublishedBinding
 import ru.netology.nmedia.databinding.CardPostBinding
 import ru.netology.nmedia.dto.Ad
+import ru.netology.nmedia.dto.DateSeparator
 import ru.netology.nmedia.dto.FeedItem
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.enumeration.AttachmentType
+import ru.netology.nmedia.util.DateFormat
 import ru.netology.nmedia.util.DisplayCount
 import ru.netology.nmedia.util.loadImage
 
@@ -37,6 +40,7 @@ class FeedItemAdapter(
         return when (getItem(position)) {
             is Ad -> R.layout.card_ad
             is Post -> R.layout.card_post
+            is DateSeparator -> R.layout.card_date_published
             null -> error("Unknown view type")
         }
     }
@@ -49,8 +53,17 @@ class FeedItemAdapter(
                 PostViewHolder(binding, listener)
             }
             R.layout.card_ad -> {
-                val binding = CardAdBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                val binding =
+                    CardAdBinding.inflate(LayoutInflater.from(parent.context), parent, false)
                 AdViewHolder(binding)
+            }
+            R.layout.card_date_published -> {
+                val binding = CardDatePublishedBinding.inflate(
+                    LayoutInflater.from(parent.context),
+                    parent,
+                    false
+                )
+                DateViewHolder(binding)
             }
             else -> error("Unknown view type $viewType")
         }
@@ -60,6 +73,7 @@ class FeedItemAdapter(
         when (val item = getItem(position)) {
             is Ad -> (holder as AdViewHolder).bind(item)
             is Post -> (holder as PostViewHolder).bind(item)
+            is DateSeparator -> (holder as DateViewHolder).bind(item)
             null -> error("Unknown view type $item")
         }
     }
@@ -74,7 +88,7 @@ class PostViewHolder(
         binding.apply {
             author.text = post.author
             content.text = post.content
-            published.text = post.published
+            published.text = DateFormat.dateFormat(post.published)
             likes.text = DisplayCount.display(post.likes)
             share.text = DisplayCount.display(post.share)
             likes.isChecked = (post.likedByMe)
@@ -142,6 +156,14 @@ class AdViewHolder(private val binding: CardAdBinding) : RecyclerView.ViewHolder
 
     fun bind(ad: Ad) {
         binding.imageAd.loadImage(BuildConfig.BASE_URL, "media", ad.image)
+    }
+}
+
+class DateViewHolder(private val binding: CardDatePublishedBinding) :
+    RecyclerView.ViewHolder(binding.root) {
+
+    fun bind(dateSeparator: DateSeparator) {
+        binding.datePublished.text = dateSeparator.published
     }
 }
 

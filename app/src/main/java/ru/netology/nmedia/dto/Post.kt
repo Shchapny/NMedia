@@ -8,7 +8,7 @@ data class Post(
     val author: String = "",
     val authorAvatar: String = "",
     val content: String = "",
-    val published: String = "",
+    val published: Long = 0L,
     val likedByMe: Boolean = false,
     val views: Long = 0,
     val likes: Long = 0,

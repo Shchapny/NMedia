@@ -53,4 +53,7 @@
     <string name="camera">Сделать снимок</string>
     <string name="gallery">Загрузить с устройства</string>
     <string name="notification">%1$s %2$s</string>
+    <string name="today">Сегодня</string>
+    <string name="yesterday">Вчера</string>
+    <string name="week_ago">На прошлой неделе</string>
 </resources>
