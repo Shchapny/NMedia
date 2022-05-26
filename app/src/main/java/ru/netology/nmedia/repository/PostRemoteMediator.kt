@@ -49,6 +49,10 @@ class PostRemoteMediator @Inject constructor(
 
             val body = response.body() ?: throw ApiError(response.code(), response.message())
 
+            if (body.isEmpty()) {
+                return MediatorResult.Success(endOfPaginationReached = false)
+            }
+
             db.withTransaction {
                 when (loadType) {
                     LoadType.REFRESH -> {

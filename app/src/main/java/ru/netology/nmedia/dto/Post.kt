@@ -1,15 +1,9 @@
 package ru.netology.nmedia.dto
 
 import com.google.gson.annotations.SerializedName
-import ru.netology.nmedia.enumeration.AttachmentType
-
-data class Attachment(
-    val url: String,
-    val type: AttachmentType
-)
 
 data class Post(
-    val id: Long = 0,
+    override val id: Long = 0,
     val authorId: Long = 0,
     val author: String = "",
     val authorAvatar: String = "",
@@ -24,4 +18,4 @@ data class Post(
     var attachment: Attachment? = null,
     @SerializedName("ownerByMe")
     val ownedById: Boolean = false
-)
+): FeedItem

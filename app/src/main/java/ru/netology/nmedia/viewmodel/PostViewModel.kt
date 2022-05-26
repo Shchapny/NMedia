@@ -6,8 +6,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
+import androidx.paging.insertSeparators
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
+import ru.netology.nmedia.dto.Ad
 import ru.netology.nmedia.dto.MediaUpload
 import ru.netology.nmedia.dto.Post
 import ru.netology.nmedia.model.FeedModelState
@@ -16,6 +19,7 @@ import ru.netology.nmedia.repository.PostRepository
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
+import kotlin.random.Random
 
 private val empty = Post()
 
@@ -30,7 +34,20 @@ class PostViewModel @Inject constructor(
     private val _photo = MutableLiveData(noPhoto)
     val photo: LiveData<PhotoModel> = _photo
 
-    private val cached = repository.data.cachedIn(viewModelScope)
+    private val cached = repository.data
+        .map { pagingData ->
+            pagingData.insertSeparators { before, _ ->
+                if (before?.id?.rem(5) == 0L) {
+                    Ad(
+                        Random.nextLong(),
+                        "figma.jpg"
+                    )
+                } else {
+                    null
+                }
+            }
+        }
+        .cachedIn(viewModelScope)
 
     val data = cached
 
