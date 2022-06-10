@@ -24,10 +24,11 @@ import ru.netology.nmedia.enumeration.AttachmentType
 import ru.netology.nmedia.errors.*
 import java.io.IOException
 import java.net.SocketTimeoutException
+import java.util.*
 import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
 
+@OptIn(ExperimentalPagingApi::class)
 @Singleton
 class PostRepositoryImpl @Inject constructor(
     private val dao: PostDao,
@@ -238,7 +239,6 @@ class PostRepositoryImpl @Inject constructor(
         }
     }
 
-    @OptIn(ExperimentalPagingApi::class)
     override val data = Pager(
         config = PagingConfig(pageSize = 10, enablePlaceholders = false),
         pagingSourceFactory = { dao.getAll() },
@@ -247,5 +247,15 @@ class PostRepositoryImpl @Inject constructor(
         .flow.map {
             it.map(PostEntity::toDto)
         }
-
+//        .map { paging ->
+//            paging.map {
+//                it.copy(
+//                    published = when {
+//                        it.id > 1050 -> Date().time
+//                        it.id > 1040 -> 1654805484
+//                        else -> 0
+//                    }
+//                )
+//            }
+//        }
 }

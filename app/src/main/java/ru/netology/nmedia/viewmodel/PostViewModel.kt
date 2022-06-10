@@ -1,5 +1,6 @@
 package ru.netology.nmedia.viewmodel
 
+import android.content.Context
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,14 +9,16 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.cachedIn
 import androidx.paging.insertSeparators
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
-import ru.netology.nmedia.dto.Ad
-import ru.netology.nmedia.dto.MediaUpload
-import ru.netology.nmedia.dto.Post
+import ru.netology.nmedia.R
+import ru.netology.nmedia.dto.*
+import ru.netology.nmedia.enumeration.DateType.*
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
+import ru.netology.nmedia.util.DatePublished
 import ru.netology.nmedia.util.SingleLiveEvent
 import java.io.File
 import javax.inject.Inject
@@ -25,6 +28,7 @@ private val empty = Post()
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: PostRepository
 ) :
     ViewModel() {
@@ -36,18 +40,43 @@ class PostViewModel @Inject constructor(
 
     private val cached = repository.data
         .map { pagingData ->
+            pagingData.insertSeparators { before, after ->
+
+                val beforePublished = DatePublished.getDatePublished(before?.published)
+                val afterPublished = DatePublished.getDatePublished(after?.published)
+
+                if (beforePublished == NULL) {
+                    when (afterPublished) {
+                        TODAY -> dateSeparator(R.string.today)
+                        YESTERDAY -> dateSeparator(R.string.yesterday)
+                        LONG_AGO -> dateSeparator(R.string.week_ago)
+                        NULL -> null
+                    }
+                } else null
+            }
+        }
+        .map { pagingData ->
             pagingData.insertSeparators { before, _ ->
                 if (before?.id?.rem(5) == 0L) {
-                    Ad(
-                        Random.nextLong(),
-                        "figma.jpg"
-                    )
-                } else {
-                    null
-                }
+                    ad("figma.jpg")
+                } else null
             }
         }
         .cachedIn(viewModelScope)
+
+    private fun dateSeparator(resource: Int): FeedItem {
+        return DateSeparator(
+            id = Random.nextLong(),
+            published = context.getString(resource)
+        )
+    }
+
+    private fun ad(text: String): FeedItem {
+        return Ad(
+            id = Random.nextLong(),
+            image = text
+        )
+    }
 
     val data = cached
 
@@ -124,6 +153,7 @@ class PostViewModel @Inject constructor(
             PlaceOfError.LIKE -> postId?.let { like(it) }
             PlaceOfError.REMOVE -> postId?.let { remove(it) }
             PlaceOfError.SAVE -> save()
+            null -> error("Unknown error cause")
         }
     }
 
