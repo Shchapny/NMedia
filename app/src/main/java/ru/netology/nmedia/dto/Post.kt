@@ -1,6 +1,7 @@
 package ru.netology.nmedia.dto
 
 import com.google.gson.annotations.SerializedName
+import java.util.*
 
 data class Post(
     override val id: Long = 0,
@@ -8,7 +9,7 @@ data class Post(
     val author: String = "",
     val authorAvatar: String = "",
     val content: String = "",
-    val published: Long = 0L,
+    val published: Long = Date().time,
     val likedByMe: Boolean = false,
     val views: Long = 0,
     val likes: Long = 0,

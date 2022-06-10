@@ -14,7 +14,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import ru.netology.nmedia.R
 import ru.netology.nmedia.dto.*
-import ru.netology.nmedia.enumeration.DateType
+import ru.netology.nmedia.enumeration.DateType.*
 import ru.netology.nmedia.model.FeedModelState
 import ru.netology.nmedia.model.PhotoModel
 import ru.netology.nmedia.repository.PostRepository
@@ -28,8 +28,8 @@ private val empty = Post()
 
 @HiltViewModel
 class PostViewModel @Inject constructor(
-    private val repository: PostRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val repository: PostRepository
 ) :
     ViewModel() {
 
@@ -45,27 +45,20 @@ class PostViewModel @Inject constructor(
                 val beforePublished = DatePublished.getDatePublished(before?.published)
                 val afterPublished = DatePublished.getDatePublished(after?.published)
 
-                when {
-                    beforePublished == DateType.NULL && afterPublished == DateType.TODAY -> dateSeparator(
-                        R.string.today
-                    )
-                    beforePublished == DateType.TODAY && afterPublished == DateType.YESTERDAY -> dateSeparator(
-                        R.string.yesterday
-                    )
-                    beforePublished == DateType.YESTERDAY && afterPublished == DateType.WEEK_AGO -> dateSeparator(
-                        R.string.week_ago
-                    )
-                    else -> null
-                }
+                if (beforePublished == NULL) {
+                    when (afterPublished) {
+                        TODAY -> dateSeparator(R.string.today)
+                        YESTERDAY -> dateSeparator(R.string.yesterday)
+                        LONG_AGO -> dateSeparator(R.string.week_ago)
+                        NULL -> null
+                    }
+                } else null
             }
         }
         .map { pagingData ->
             pagingData.insertSeparators { before, _ ->
                 if (before?.id?.rem(5) == 0L) {
-                    Ad(
-                        Random.nextLong(),
-                        "figma.jpg"
-                    )
+                    ad("figma.jpg")
                 } else null
             }
         }
@@ -75,6 +68,13 @@ class PostViewModel @Inject constructor(
         return DateSeparator(
             id = Random.nextLong(),
             published = context.getString(resource)
+        )
+    }
+
+    private fun ad(text: String): FeedItem {
+        return Ad(
+            id = Random.nextLong(),
+            image = text
         )
     }
 

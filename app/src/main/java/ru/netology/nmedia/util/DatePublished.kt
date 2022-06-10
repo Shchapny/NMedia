@@ -21,7 +21,7 @@ object DatePublished {
         return when {
             timePublished in 0..23L -> DateType.TODAY
             timePublished in 24L..47L -> DateType.YESTERDAY
-            timePublished >= 48L -> DateType.WEEK_AGO
+            timePublished >= 48 -> DateType.LONG_AGO
             else -> DateType.NULL
         }
     }
